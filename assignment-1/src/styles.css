@@ -36,3 +36,19 @@ button {
     margin-right: 3px;
     cursor: pointer;
 }
+
+#weather-section {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.weather-card {
+    background-color: rgb(148, 47, 47);
+    color: black;
+    width: 200px;
+    border-radius: 6px;
+    padding: 5px 10px;
+}

@@ -5,9 +5,11 @@ export default window => {
     /* ------------------------ HTML ELEMENTS DECLARATION ----------------------- */
 
     const forecastSection = document.getElementById(`forecast-section`);
+    const weatherSection = document.getElementById('weather-section;')
     const horsensButton = document.getElementById(`horsens-button`);
     const aarhusButton = document.getElementById(`aarhus-button`);
     const copenhagenButton = document.getElementById(`copenhagen-button`);
+
 
     /* ---------------------------- VIEW MANIPULATION --------------------------- */
 
@@ -20,13 +22,33 @@ export default window => {
         forecastSection.appendChild(forecastCard);
     };
 
-    const updateForecast = (model) => {
+    const updateForecast = (forecastModel) => {
         forecastSection.innerHTML = ``;
-        const hourlyForecastMap = model.hourlyForecast();
+        const hourlyForecastMap = forecastModel.hourlyForecast();
         for(const key in hourlyForecastMap) {
             addForecast(hourlyForecastMap[key]);
         }
-    }
+    };
+
+    const addWeather = (data) => {
+        const weatherCard = document.createElement(`div`);
+        weatherCard.classList.add('weather-card');
+        weatherCard.appendChild(document.createTextNode(`Temperature`));
+        weatherCard.appendChild(document.createTextNode(`${data[`temperature`].value}` ));
+        weatherCard.appendChild(document.createTextNode(`${data[`temperature`].value}`));
+        weatherSection.appendChild(weatherCard);
+        };
+        
+
+    const updateWeather1 = (dataModel) => {
+        weatherSection.innerHTML = ``;
+        const historicalMeasurementsMap = dataModel.historicalMeasurements();
+        for(const key in historicalMeasurementsMap) {
+           addWeather (historicalMeasurementsMap[key]);
+        }
+    };
+
+    
 
     /* ----------------------------- LISTENERS ---------------------------- */
 
@@ -34,26 +56,26 @@ export default window => {
 
     const addDefaultListeners = () => {
         horsensButton.onclick = () => {
-            const event = { type: `city-chagne`, place: `Horsens`,  endpoint: `forecast`};
+            const event = { type: `city-chagne`, place: `Horsens`, forecastEndpoint: 'forecast', dataEndpoint: 'data'}; 
             listeners.map((listener) => {
                 listener(event);
             })
         }
     
         aarhusButton.onclick = () => {
-            const event = { type: `city-chagne`, place: `Aarhus`, endpoint: `forecast`};
+            const event = { type: `city-chagne`, place: `Aarhus`, forecastEndpoint: 'forecast', dataEndpoint: 'data' };
             listeners.map((listener) => {
                 listener(event);
             })
         }
     
         copenhagenButton.onclick = () => {
-            const event = { type: `city-chagne`, place: `Copenhagen`,  endpoint: `forecast`};
+            const event = { type: `city-chagne`, place: `Copenhagen`,  forecastEndpoint: 'forecast', dataEndpoint: 'data'};
             listeners.map((listener) => {
                 listener(event);
             })
         }
     }
 
-    return { addForecast, listen, addDefaultListeners, updateForecast };
+    return { addForecast, listen, addDefaultListeners, updateForecast,addWeather,updateWeather1}; 
 }
