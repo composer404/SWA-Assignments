@@ -13,6 +13,7 @@ const fetchCommon = {
 
 const fetchWrapper = {
     fetchFromApi: async (url) => {
+        console.log(`Fetch is used`);
         const response = await fetch(url);
         return response.json();
     },
@@ -32,8 +33,33 @@ Object.setPrototypeOf(fetchWrapper, fetchCommon);
 
 const xmlRequestWrapper = {
     fetchFromApi: async (url) => {
+        console.log(`XMLHttpRequest is used`);
+        const request = new XMLHttpRequest();
 
-    }
+        const promise = new Promise((resolve) => {
+            request.onload = () => {
+                resolve(JSON.parse(request.responseText));
+            }
+        });
+
+        request.open(`GET`, url);
+        request.send();
+        return promise;
+    },
+
+    postData: async (url, body) => {
+        const request = new XMLHttpRequest();
+
+        const promise = new Promise((resolve) => {
+            request.onload = () => {
+                resolve(JSON.parse(request.responseText));
+            }
+        });
+
+        request.open(`POST`, url, );
+        request.send(JSON.stringify(body));
+        return promise;
+    },
 }
 
 Object.setPrototypeOf(xmlRequestWrapper, fetchCommon);

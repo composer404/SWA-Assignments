@@ -1,7 +1,5 @@
 /* ----------------------------- ONCLICK ACTIONS ---------------------------- */
 
-import { fetchWrapper } from "./fetch";
-
 export default (forecastModel, dataModel, view) => {
     const onAction = async ({type, ...params}) =>  {
       switch(type) {
@@ -9,14 +7,14 @@ export default (forecastModel, dataModel, view) => {
         /* --------------- ACTION REALATED WITH RELOADING DATA FOR SELECTED CITY -------------- */
 
         case `city-chagne`:
-          const forecastUrl = fetchWrapper.buildUrl(params.forecastEndpoint, params.place);
-          fetchWrapper.fetchFromApi(forecastUrl).then((response) => {
+          const forecastUrl = params.wrapper.buildUrl(params.forecastEndpoint, params.place);
+          params.wrapper.fetchFromApi(forecastUrl).then((response) => {
             const updatedForecastModel = forecastModel.updateForecasts(response);
             view.updateForecast(updatedForecastModel);
           })
           
-          const dataUrl = fetchWrapper.buildUrl(params.dataEndpoint, params.place);
-          fetchWrapper.fetchFromApi(dataUrl).then((response) => {
+          const dataUrl = params.wrapper.buildUrl(params.dataEndpoint, params.place);
+          params.wrapper.fetchFromApi(dataUrl).then((response) => {
 
             const updatedDataModel = dataModel.updateWeather(response);
             view.updateWeather(updatedDataModel);
@@ -24,8 +22,8 @@ export default (forecastModel, dataModel, view) => {
           break;
 
           case `add-data`:
-            const dataPostUrl = fetchWrapper.buildUrl(params.dataEndpoint, params.place);
-            fetchWrapper.postData(dataPostUrl, params.values);
+            const dataPostUrl = params.wrapper.buildUrl(params.dataEndpoint, params.place);
+            params.wrapper.postData(dataPostUrl, params.values);
       }
     }
   

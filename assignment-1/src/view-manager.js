@@ -1,8 +1,11 @@
+import { fetchWrapper, xmlRequestWrapper } from "./fetch";
+
 import { DateTime } from "luxon";
 
 export default window => {
     const document = window.document;
     const listeners = [];
+    let selectedApiWrapper = fetchWrapper;
 
     /* ------------------------ HTML ELEMENTS DECLARATION ----------------------- */
 
@@ -16,6 +19,8 @@ export default window => {
     const aarhusButton = document.getElementById(`aarhus-button`);
     const copenhagenButton = document.getElementById(`copenhagen-button`);
     const createButton = document.getElementById(`create-button`);
+    const fetchButton = document.getElementById(`fetch-button`);
+    const xmlButton = document.getElementById(`xml-button`);
 
     // Other elements
     const header = document.getElementById(`header`);
@@ -195,27 +200,39 @@ export default window => {
     const addDefaultListeners = () => {
         horsensButton.onclick = () => {
             header.textContent = `Horsens`;
-            const event = { type: `city-chagne`, place: `Horsens`, forecastEndpoint: 'forecast', dataEndpoint: 'data'}; 
+            const event = { type: `city-chagne`, wrapper: selectedApiWrapper, place: `Horsens`, forecastEndpoint: 'forecast', dataEndpoint: 'data'}; 
             listeners.map((listener) => {
                 listener(event);
             })
-        }
+        };
     
         aarhusButton.onclick = () => {
             header.textContent = `Aarhus`;
-            const event = { type: `city-chagne`, place: `Aarhus`, forecastEndpoint: 'forecast', dataEndpoint: 'data' };
+            const event = { type: `city-chagne`, wrapper: selectedApiWrapper, place: `Aarhus`, forecastEndpoint: 'forecast', dataEndpoint: 'data' };
             listeners.map((listener) => {
                 listener(event);
             })
-        }
+        };
     
         copenhagenButton.onclick = () => {
             header.textContent = `Copenhagen`;
-            const event = { type: `city-chagne`, place: `Copenhagen`,  forecastEndpoint: 'forecast', dataEndpoint: 'data'};
+            const event = { type: `city-chagne`, wrapper: selectedApiWrapper, place: `Copenhagen`,  forecastEndpoint: 'forecast', dataEndpoint: 'data'};
             listeners.map((listener) => {
                 listener(event);
             })
-        }
+        };
+
+        xmlButton.onclick = () => {
+            selectedApiWrapper = xmlRequestWrapper;
+            xmlButton.classList.add(`selected-button`);
+            fetchButton.classList.remove(`selected-button`);
+        };
+
+        fetchButton.onclick = () => {
+            selectedApiWrapper = fetchWrapper;
+            fetchButton.classList.add(`selected-button`);
+            xmlButton.classList.remove(`selected-button`);
+        };
 
         createButton.onclick = () => {
             weatherSection.innerHTML = ``;
@@ -228,12 +245,13 @@ export default window => {
             header.innerHTML = ``;
 
             addDataForm.style.display = `block`;
-        }
+        };
 
         addDataForm.addEventListener(`submit`, (e) => {
             const event = {
                 type: `add-data`,
                 dataEndpoint: 'data',
+                wrapper: selectedApiWrapper,
                 values: {
                     type: addDataForm.elements[`type`].value,
                     place: addDataForm.elements[`place`].value,
