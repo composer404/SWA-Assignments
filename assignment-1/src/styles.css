@@ -1,7 +1,32 @@
+:root {
+    --accent: #FCF299;
+    --text: #000000;
+
+    --primary-button-bg: #000000;
+    --primary-button-color: #ffffff;
+
+    --box-color: #ffffff;
+}
+
 body {
-    color: white;
-    background-color: rgb(99, 96, 96);
+    padding: 0;
+    margin: 0;
+    color: var(--text);
+    background-color: #F7F5F4;
+}
+
+.nav-bar {
+    background-color: var(--accent);
     padding: 20px;
+    display: flex;
+    gap: 50px;
+    box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+    align-items: center;
+}
+
+.title {
+    font-weight: 600;
+    font-size: 26px;
 }
 
 .button-section {
@@ -12,17 +37,16 @@ body {
 }
 
 #forecast-section {
-    width: 100%;
     display: flex;
-    flex-wrap: wrap;
     justify-content: space-between;
+    overflow: auto;
     gap: 10px;
 }
 
 .forecast-card {
     background-color: white;
     color: black;
-    width: 200px;
+    min-width: 250px;
     border-radius: 6px;
     padding: 5px 10px;
 }
@@ -35,15 +59,17 @@ button {
     margin-left: 3px;
     margin-right: 3px;
     cursor: pointer;
+    background-color: var(--primary-button-bg);
+    color: var(--primary-button-color);
 }
 
-#weather-section {
+/* #weather-section {
     width: 100%;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
     gap: 10px;
-}
+} */
 
 .weather-card {
     background-color: rgb(148, 47, 47);
@@ -51,4 +77,51 @@ button {
     width: 200px;
     border-radius: 6px;
     padding: 5px 10px;
+}
+
+header {
+    width: 100%;
+    margin-top: 20px;
+    font-size: 36px;
+    letter-spacing: .1rem;
+    font-weight: 700;
+}
+
+.content {
+    padding: 20px;
+}
+
+.card {
+    background-color: var(--box-color);
+    border-radius: 6px;
+    padding: 20px;
+    width: 180px;
+}
+
+.item {
+    margin-bottom: 20px;
+}
+
+.item:last-child {
+    margin-bottom: 0;
+}
+
+.item label {
+    font-weight: 800;
+    margin-bottom: 10px;
+}
+
+.item div {
+    font-size: 24px;
+}
+
+.section-title {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    font-size: 22px;
+}
+
+.section {
+    display: flex;
+    gap: 20px;
 }

@@ -1,54 +1,192 @@
+import { DateTime } from "luxon";
+
 export default window => {
     const document = window.document;
     const listeners = [];
 
     /* ------------------------ HTML ELEMENTS DECLARATION ----------------------- */
 
+    // Sections
     const forecastSection = document.getElementById(`forecast-section`);
-    const weatherSection = document.getElementById('weather-section;')
+    const weatherSection = document.getElementById('weather-section');
+    const latestSection = document.getElementById('latest-section');
+
+    // Buttons
     const horsensButton = document.getElementById(`horsens-button`);
     const aarhusButton = document.getElementById(`aarhus-button`);
     const copenhagenButton = document.getElementById(`copenhagen-button`);
+    const createButton = document.getElementById(`create-button`);
 
+    // Other elements
+    const header = document.getElementById(`header`);
+    const weatherSectionTitle = document.getElementById(`weather-section-title`);
+    const latestSectionTitle = document.getElementById(`latest-section-title`);
+    const forecastSectionTitle = document.getElementById(`forecast-section-title`);
+    const addDataForm = document.getElementById(`add-data-form`)
 
-    /* ---------------------------- VIEW MANIPULATION --------------------------- */
+    /* ------------------------ VIEW MANIPULATION WEATHER ----------------------- */
 
-    const addForecast = (forecast) => {
-        const forecastCard = document.createElement(`div`);
-        forecastCard.classList.add('forecast-card');
-        forecastCard.appendChild(document.createTextNode(`Temperature`));
-        forecastCard.appendChild(document.createTextNode(`${forecast[`temperature`].from} - ${forecast[`temperature`].to}`));
-        forecastCard.appendChild(document.createTextNode(`${forecast[`temperature`].from} - ${forecast[`temperature`].to}`));
-        forecastSection.appendChild(forecastCard);
-    };
+    const updateWeather = (weatherModel) => {
+        weatherSection.innerHTML = ``;
+        addDataForm.style.display = `none`;
+        displayLastTemperatureRange(weatherModel);
+        displayLatestMeasurement(weatherModel);
+    }
+
+    const displayLatestMeasurement = (weatherModel) => {
+        latestSection.innerHTML = ``;
+        const latestMeasurement =  weatherModel.getLastMeasurementEachKind()
+        latestSectionTitle.innerHTML = `Latest measurements`;
+
+        for(const type in latestMeasurement) {
+            const values = latestMeasurement[type];
+
+            switch(type) {
+                case `temperature`: {
+                    latestSection.appendChild(createCardWithData([
+                        {
+                            label: `Temperature`,
+                        },
+                        {
+                            label: `Value`,
+                            value: `${values.value} &#176;${values.unit}`,
+                        },
+                        {
+                            label: `Time`,
+                            value: DateTime.fromISO(values.time).toFormat(`dd/MM/yyyy HH:mm`),
+                        }
+                    ]));
+                    break;
+                }
+
+                case `wind_speed`: {
+                    latestSection.appendChild(createCardWithData([
+                        {
+                            label: `Wind speed`,
+                        },
+                        {
+                            label: `Value`,
+                            value: `${values.value} ${values.unit}`,
+                        },
+                        {
+                            label: `Direction`,
+                            value: `${values.direction}`,
+                        },
+                        {
+                            label: `Time`,
+                            value: DateTime.fromISO(values.time).toFormat(`dd/MM/yyyy HH:mm`),
+                        }
+                    ]));
+                    break;
+                }
+
+                case `precipitation`: {
+                    latestSection.appendChild(createCardWithData([
+                        {
+                            label: `Precipitation`,
+                        },
+                        {
+                            label: `Value`,
+                            value: `${values.value} ${values.unit}`,
+                        },
+                        {
+                            label: `Type`,
+                            value: `${values.precipitation_type}`,
+                        },
+                        {
+                            label: `Time`,
+                            value: DateTime.fromISO(values.time).toFormat(`dd/MM/yyyy HH:mm`),
+                        }
+                    ]));
+                    break;
+                }
+
+                case `cloud_coverage`: {
+                    latestSection.appendChild(createCardWithData([
+                        {
+                            label: `Cloud coverage`,
+                        },
+                        {
+                            label: `Value`,
+                            value: `${values.value} ${values.unit}`,
+                        },
+                        {
+                            label: `Time`,
+                            value: DateTime.fromISO(values.time).toFormat(`dd/MM/yyyy HH:mm`),
+                        }
+                    ]));
+                    break;
+                }
+            }
+        }
+    }
+
+    const createCardWithData = (data, styleClass) => {
+        const card = document.createElement(`div`);
+        card.classList.add(`${styleClass ? styleClass : 'card'}`);
+        let htmlString = ``
+        data.forEach((element) => {
+            htmlString += `<div class="item">`;
+            htmlString += `<label>${element.label || ``}</label>`;
+            htmlString += `<div>${element.value || ``}</div>`;
+            htmlString += `</div>`;
+        });
+        card.innerHTML = htmlString;
+        return card;
+    }
+        
+    const displayLastTemperatureRange = (weatherModel) => {
+        const range = weatherModel.getLastDayTemperatureRange();
+        const lastDay = weatherModel.getLastDayAsString();
+
+        weatherSectionTitle.innerHTML = `Weather (Last day: ${lastDay})`;
+        weatherSection.appendChild(createCardWithData([{
+            label: `Minimim Temperature`,
+            value: `${range.minTemperature}  &#176;${range.minTemperatureUnit}`
+        },
+        {
+            label: `Maximum Temperature`,
+            value: `${range.maxTemperature}  &#176;${range.maxTemperatureUnit}`
+        }]));
+    }
+
+    /* ---------------------------- VIEW MANIPULATION FORECAST --------------------------- */
 
     const updateForecast = (forecastModel) => {
+        addDataForm.style.display = `none`;
         forecastSection.innerHTML = ``;
+        forecastSectionTitle.innerHTML = `Forecast`
         const hourlyForecastMap = forecastModel.hourlyForecast();
         for(const key in hourlyForecastMap) {
-            addForecast(hourlyForecastMap[key]);
+            addForecast(hourlyForecastMap[key], key);
         }
     };
 
-    const addWeather = (data) => {
-        const weatherCard = document.createElement(`div`);
-        weatherCard.classList.add('weather-card');
-        weatherCard.appendChild(document.createTextNode(`Temperature`));
-        weatherCard.appendChild(document.createTextNode(`${data[`temperature`].value}` ));
-        weatherCard.appendChild(document.createTextNode(`${data[`temperature`].value}`));
-        weatherSection.appendChild(weatherCard);
-        };
-        
+    const addForecast = (forecast, date) => {
+        forecastSection.appendChild(createCardWithData([
+            {
+                label: `Date`,
+                value: DateTime.fromISO(date).toFormat(`dd/MM/yyyy HH:mm`),
+            },
+            {
+                label: `Temperature`,
+                value: `${forecast[`temperature`].from}  &#176;${forecast[`temperature`].unit} - ${forecast[`temperature`].to} &#176;${forecast[`temperature`].unit}`,
+            },
+            {
+                label: `Cloud coverage`,
+                value: `${forecast[`cloud coverage`].from }${forecast[`cloud coverage`].unit} - ${forecast[`cloud coverage`].to}${forecast[`cloud coverage`].unit}`
+            },
+            {
+                label: `Precipitation`,
+                value: `${forecast[`precipitation`].from }${forecast[`precipitation`].unit} - ${forecast[`precipitation`].to}${forecast[`precipitation`].unit} (${forecast[`precipitation`].precipitation_types.toString().replaceAll(`,`, `, `)})`
+            },
+            {
+                label: `Wind speed`,
+                value: `${forecast[`wind speed`].from }${forecast[`wind speed`].unit} - ${forecast[`wind speed`].to}${forecast[`wind speed`].unit} (${forecast[`wind speed`].directions.toString().replaceAll(`,`, `, `)})`
+            }
+        ], `forecast-card`));
 
-    const updateWeather1 = (dataModel) => {
-        weatherSection.innerHTML = ``;
-        const historicalMeasurementsMap = dataModel.historicalMeasurements();
-        for(const key in historicalMeasurementsMap) {
-           addWeather (historicalMeasurementsMap[key]);
-        }
     };
-
-    
 
     /* ----------------------------- LISTENERS ---------------------------- */
 
@@ -56,6 +194,7 @@ export default window => {
 
     const addDefaultListeners = () => {
         horsensButton.onclick = () => {
+            header.textContent = `Horsens`;
             const event = { type: `city-chagne`, place: `Horsens`, forecastEndpoint: 'forecast', dataEndpoint: 'data'}; 
             listeners.map((listener) => {
                 listener(event);
@@ -63,6 +202,7 @@ export default window => {
         }
     
         aarhusButton.onclick = () => {
+            header.textContent = `Aarhus`;
             const event = { type: `city-chagne`, place: `Aarhus`, forecastEndpoint: 'forecast', dataEndpoint: 'data' };
             listeners.map((listener) => {
                 listener(event);
@@ -70,12 +210,44 @@ export default window => {
         }
     
         copenhagenButton.onclick = () => {
+            header.textContent = `Copenhagen`;
             const event = { type: `city-chagne`, place: `Copenhagen`,  forecastEndpoint: 'forecast', dataEndpoint: 'data'};
             listeners.map((listener) => {
                 listener(event);
             })
         }
+
+        createButton.onclick = () => {
+            weatherSection.innerHTML = ``;
+            forecastSection.innerHTML = ``;
+            latestSection.innerHTML = ``;
+
+            latestSectionTitle.innerHTML = ``;
+            weatherSectionTitle.innerHTML = ``;
+            forecastSectionTitle.innerHTML = ``;
+            header.innerHTML = ``;
+
+            addDataForm.style.display = `block`;
+        }
+
+        addDataForm.addEventListener(`submit`, (e) => {
+            const event = {
+                type: `add-data`,
+                dataEndpoint: 'data',
+                values: {
+                    type: addDataForm.elements[`type`].value,
+                    place: addDataForm.elements[`place`].value,
+                    value: addDataForm.elements[`value`].value,
+                    unit: addDataForm.elements[`unit`].value,
+                }
+            }
+            listeners.map((listener) => {
+                listener(event);
+            })
+            e.preventDefault();
+            e.stopImmediatePropagation();
+        });
     }
 
-    return { addForecast, listen, addDefaultListeners, updateForecast,addWeather,updateWeather1}; 
+    return { addForecast, listen, addDefaultListeners, updateForecast, updateWeather}; 
 }

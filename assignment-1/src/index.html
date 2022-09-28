@@ -3,14 +3,75 @@
     <title><%= htmlWebpackPlugin.options.title %></title>
   </head>
   <body>
-    <div class="button-section">
-      <button id="horsens-button">Horsens</button>
-      <button id="aarhus-button">Aarhus</button>
-      <button id="copenhagen-button">Copenhagen</button>
+    <!-- ----------------------------------------------------------------------- -->
+    <!--                               NAVIGATION                                -->
+    <!-- ----------------------------------------------------------------------- -->
+
+    <nav>
+      <div class="nav-bar">
+        <div class="title">SWE Assignmnet 1</div>
+        <div>
+          <button id="horsens-button">Horsens</button>
+          <button id="aarhus-button">Aarhus</button>
+          <button id="copenhagen-button">Copenhagen</button>
+          <button id="create-button">Add weather</button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- ----------------------------------------------------------------------- -->
+    <!--                      CONTENT VIEW SPLIT BY SECTION                      -->
+    <!-- ----------------------------------------------------------------------- -->
+
+    <div class="content">
+      <header id="header"></header>
+      <section>
+        <div class="section-title" id="forecast-section-title"></div>
+        <div id="forecast-section"></div>
+      </section>
+      <section>
+        <div class="section-title" id="weather-section-title"></div>
+        <div class="section" id="weather-section"></div>
+      </section>
+      <section>
+        <div class="section-title" id="latest-section-title"></div>
+        <div class="section" id="latest-section"></div>
+      </section>
     </div>
-    <div id="forecast-section"></div>
-    <div></div>
-    <div id="weather-section"></div>
+
+    <!-- ----------------------------------------------------------------------- -->
+    <!--                              ADD DATA FORM                              -->
+    <!-- ----------------------------------------------------------------------- -->
+
+    <form id="add-data-form">
+      <div class="field">
+        <label>Place</label>
+        <input type="text" name="place" />
+        <small></small>
+      </div>
+      <div class="field">
+        <label>Type</label>
+        <input type="text" name="type" />
+        <small></small>
+      </div>
+      <div class="field">
+        <label>Value</label>
+        <input type="text" name="value" />
+        <small></small>
+      </div>
+      <div class="field">
+        <label>Unit</label>
+        <input type="text" name="unit" />
+        <small></small>
+      </div>
+
+      <button type="submit">Add data</button>
+    </form>
+
+    <!-- ----------------------------------------------------------------------- -->
+    <!--                              DEPENDENCIES                               -->
+    <!-- ----------------------------------------------------------------------- -->
+
     <script src="main.js"></script>
   </body>
 </html>
