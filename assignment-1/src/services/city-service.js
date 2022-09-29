@@ -20,10 +20,6 @@ export default (forecastModel, dataModel, view) => {
             view.updateWeather(updatedDataModel);
           });
           break;
-
-          case `add-data`:
-            const dataPostUrl = params.wrapper.buildUrl(params.dataEndpoint, params.place);
-            params.wrapper.postData(dataPostUrl, params.values);
       }
     }
   

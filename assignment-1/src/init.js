@@ -1,44 +1,33 @@
 import './styles.css';
 
-import cityManager from './city-manager';
-import dataModel from './weather-model';
-import forecastModel from './forecast-model';
-import viewManager from './view-manager';
-
-// import model from './parent-model';
-
-
-// import { fetchCommon, fetchData, fetchWithXML } from './fetch'
-
-
-
-
-
-
+import cityService from './services/city-service';
+import dataModel from './models/weather-model';
+import dataService from './services/data-service';
+import forecastModel from './models/forecast-model';
+import viewController from './controllers/view-controller';
 
 /* ---------------- INITIALIZE ALL REQUIRED FACTORY FUNCTIONS --------------- */
 
 const init = async () => {
-    // const parentModel = model();
 
-    // const initfetchCommon = fetchCommon();
-    // const initfetchData = fetchData();
-    // const initfetchWithXML = fetchWithXML();
-
-    // Object.setPrototypeOf(initfetchData, initfetchCommon);
-    // Object.setPrototypeOf(initfetchWithXML, initfetchData);
+    /* ------------------------------- models init ------------------------------ */
 
     const initForecastModel = forecastModel();
     const initDataModel = dataModel();
 
-    // Object.setPrototypeOf(initForecastModel, parentModel);
-    // Object.setPrototypeOf(initDataModel, parentModel);
+    /* ---------------------------- contollers inint ---------------------------- */
 
-    const view = viewManager(window);
-    const city = cityManager(initForecastModel, initDataModel, view);
+    const view = viewController(window);
+
+    /* ------------------------------ service init ------------------------------ */
+
+    const initCityService = cityService(initForecastModel, initDataModel, view);
+    const initDataService = dataService(view);
 
     view.addDefaultListeners();
-    view.listen(city.onAction);
+    view.listen(initCityService.onAction);
+    view.listen(initDataService.onAction);
+
 }
 
 void init();

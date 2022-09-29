@@ -1,4 +1,4 @@
-import { fetchWrapper, xmlRequestWrapper } from "./fetch";
+import { fetchWrapper, xmlRequestWrapper } from "../utils/fetch";
 
 import { DateTime } from "luxon";
 
