@@ -27,7 +27,13 @@ export default window => {
     const weatherSectionTitle = document.getElementById(`weather-section-title`);
     const latestSectionTitle = document.getElementById(`latest-section-title`);
     const forecastSectionTitle = document.getElementById(`forecast-section-title`);
-    const addDataForm = document.getElementById(`add-data-form`)
+    const addDataForm = document.getElementById(`add-data-form`);
+
+    /* ------------------------ VIEW MANIPULATION GENERAL ----------------------- */
+
+    const displayMessage = (message) => {
+        alert(message);
+    };
 
     /* ------------------------ VIEW MANIPULATION WEATHER ----------------------- */
 
@@ -267,5 +273,5 @@ export default window => {
         });
     }
 
-    return { addForecast, listen, addDefaultListeners, updateForecast, updateWeather}; 
+    return { listen, addDefaultListeners, updateForecast, updateWeather, displayMessage}; 
 }

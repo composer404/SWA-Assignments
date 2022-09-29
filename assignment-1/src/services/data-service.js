@@ -3,7 +3,13 @@ export default (view) => {
         switch(type) {
             case `add-data`:
                 const dataPostUrl = params.wrapper.buildUrl(params.dataEndpoint, params.place);
-                params.wrapper.postData(dataPostUrl, params.values);
+                params.wrapper.postData(dataPostUrl, params.values)
+                .then(() => {
+                    view.displayMessage(`Successfully added data!`);
+                })
+                .catch(() => {
+                    view.displayMessage(`Adding data failed!`);
+                });
                 break;
         }
     }
