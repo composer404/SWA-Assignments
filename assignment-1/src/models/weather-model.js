@@ -1,22 +1,7 @@
-const measurementType = {
-    temperature: `temperature`,
-    precipitation: `precipitation`,
-    wind_speed: `wind speed`,
-    cloud_coverage: `cloud coverage`,
-};
-
+import model from "./parent-model";
 
 const dataModel = (data, filter = () => true) => {
-    // const historicalMeasurements = () => {
-    //     const wMap = {}
-    //     weather
-    //     .map((data) => {
-    //     wMap[data.time] = {
-    //         ...wMap[data.time],[data.type]: data,
-    //     };
-    //     }).sort().filter(filter);
-    //     return wMap;
-    // }
+    const parentModel = model();
     const getMinTemperatureForLastDay = () => {
         const filtered = data.filter((element) => {
             const elementDate = new Date(element.time);
@@ -70,26 +55,27 @@ const dataModel = (data, filter = () => true) => {
         return dateAsString;
     }
 
-    const getListByMeasurementType = (type) => {
-        return data.filter((element) => {
-            return element.type === type;
-        }).sort((element, nextElement) => {
-            return new Date(element.time) - new Date(nextElement.time);
-        }).reverse();
-    }
+    const getLastDayTotalPreciptation = () => {
+        // ! TODO
+    };
+
+    const getLastDayAverageSpeed = () => {
+        // ! TODO
+    };
 
     const getLastMeasurementEachKind = () => {
+        const types = parentModel.getMeasurementTypes();
         return {
-            temperature: getListByMeasurementType(measurementType.temperature)[0],
-            cloud_coverage: getListByMeasurementType(measurementType.cloud_coverage)[0],
-            precipitation: getListByMeasurementType(measurementType.precipitation)[0],
-            wind_speed: getListByMeasurementType(measurementType.wind_speed)[0],
+            temperature: parentModel.getListByMeasurementType(data, types.temperature)[0],
+            cloud_coverage: parentModel.getListByMeasurementType(data, types.cloud_coverage)[0],
+            precipitation: parentModel.getListByMeasurementType(data, types.precipitation)[0],
+            wind_speed: parentModel.getListByMeasurementType(data, types.wind_speed)[0],
         }
     }
 
     const updateWeather = (f) => dataModel(f);
     
-    return { updateWeather, getLastDayTemperatureRange, getLastDayAsString, getLastMeasurementEachKind }
+    return { updateWeather, getLastDayTemperatureRange, getLastDayAsString, getLastMeasurementEachKind, getLastDayTotalPreciptation, getLastDayAverageSpeed}
 }
 
 export default dataModel;

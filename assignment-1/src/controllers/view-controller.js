@@ -42,7 +42,17 @@ export default window => {
         addDataForm.style.display = `none`;
         displayLastTemperatureRange(weatherModel);
         displayLatestMeasurement(weatherModel);
+        displayAverageWind(weatherModel);
+        displayTotalPrecipitation(weatherModel);
     }
+
+    const displayAverageWind = (weatherModel) => {
+        // ! TODO
+    };
+
+    const displayTotalPrecipitation = (weatherModel) => {
+        // ! TODO
+    };
 
     const displayLatestMeasurement = (weatherModel) => {
         latestSection.innerHTML = ``;
@@ -185,7 +195,7 @@ export default window => {
             },
             {
                 label: `Cloud coverage`,
-                value: `${forecast[`cloud coverage`].from }${forecast[`cloud coverage`].unit} - ${forecast[`cloud coverage`].to}${forecast[`cloud coverage`].unit}`
+                value: `${forecast[`cloud_coverage`].from }${forecast[`cloud_coverage`].unit} - ${forecast[`cloud_coverage`].to}${forecast[`cloud_coverage`].unit}`
             },
             {
                 label: `Precipitation`,
@@ -193,7 +203,7 @@ export default window => {
             },
             {
                 label: `Wind speed`,
-                value: `${forecast[`wind speed`].from }${forecast[`wind speed`].unit} - ${forecast[`wind speed`].to}${forecast[`wind speed`].unit} (${forecast[`wind speed`].directions.toString().replaceAll(`,`, `, `)})`
+                value: `${forecast[`wind_speed`].from }${forecast[`wind_speed`].unit} - ${forecast[`wind_speed`].to}${forecast[`wind_speed`].unit} (${forecast[`wind_speed`].directions.toString().replaceAll(`,`, `, `)})`
             }
         ], `forecast-card`));
 

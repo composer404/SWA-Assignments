@@ -1,22 +1,22 @@
 const model = () => {
-    const mapValuesByDate = (values) => {
-        const mapedValues = {}
-        values
-        .map((value) => {
-        mapedValues[value.time] = {
-            ...mapedValues[value.time],
-            [value.type]: value,
-        };
-        }).sort();
-        return mapedValues;
-    }
+    const getMeasurementTypes = () => {
+        return {
+            temperature: `temperature`,
+            precipitation: `precipitation`,
+            wind_speed: `wind speed`,
+            cloud_coverage: `cloud coverage`,
+        }
+    };
     
-    const updateModelValue = (model, value) => {
-        model(value);
-        // return Object.create(model(), defaultModel(value));
-    }
+    const getListByMeasurementType = (values, type) => {
+        return values.filter((element) => {
+            return element.type === type;
+        }).sort((element, nextElement) => {
+            return new Date(element.time) - new Date(nextElement.time);
+        }).reverse();
+    };
 
-    return { mapValuesByDate, updateModelValue }
+    return { getListByMeasurementType, getMeasurementTypes }
 }
 
 export default model;
