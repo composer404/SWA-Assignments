@@ -4,5 +4,4 @@
 
 <ul>
     <li><h3>Assignment 1</h3></li>
-    <p>In order to run to run the app use <b>npm run start</b>. You also need to have weather server running on <b>localhost:8080</b></b></p>
-</ul>
+    <p>In order to run the app use <b>npm run start</b>. You also need to have weather server running on <b>localhost:8080</b></b></p></ul>
