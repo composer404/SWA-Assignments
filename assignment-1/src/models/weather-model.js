@@ -55,12 +55,34 @@ const dataModel = (data, filter = () => true) => {
         return dateAsString;
     }
 
-    const getLastDayTotalPreciptation = () => {
-        // ! TODO
+    const getLastDayTotalPrecipitation = () => {
+        const filtered = data.filter((element) => {
+            const elementDate = new Date(element.time);
+            const now = new Date();
+            return element.type === `precipitation` && elementDate.getUTCDate() === now.getDate() - 1;
+        });
+
+        const totalPrecipitation = Math.max(...filtered.map(element => {
+            return element.value;
+        }));
+
+        return {
+            totalPrecipitation
+        }
     };
 
-    const getLastDayAverageSpeed = () => {
-        // ! TODO
+    const getLastDayAverageWindSpeed = () => {
+        const filtered = data.filter((element) => {
+            const elementDate = new Date(element.time);
+            const now = new Date();
+            return element.type === `wind_speed` && elementDate.getUTCDate() === now.getDate() - 1;
+        });
+
+        const averageWindSpeed = filtered.reduce((a, b) => a + b, 0) / filtered.length;
+
+        return {
+            averageWindSpeed
+        }
     };
 
     const getLastMeasurementEachKind = () => {
@@ -75,7 +97,7 @@ const dataModel = (data, filter = () => true) => {
 
     const updateWeather = (f) => dataModel(f);
     
-    return { updateWeather, getLastDayTemperatureRange, getLastDayAsString, getLastMeasurementEachKind, getLastDayTotalPreciptation, getLastDayAverageSpeed}
+    return { updateWeather, getLastDayTemperatureRange, getLastDayAsString, getLastMeasurementEachKind, getLastDayTotalPrecipitation, getLastDayAverageWindSpeed}
 }
 
 export default dataModel;

@@ -47,11 +47,25 @@ export default window => {
     }
 
     const displayAverageWind = (weatherModel) => {
-        // ! TODO
+        const avr = weatherModel.getLastDayAverageWindSpeed();
+        const lastDay = weatherModel.getLastDayAsString();
+
+        weatherSectionTitle.innerHTML = `Weather (Last day: ${lastDay})`;
+        weatherSection.appendChild(createCardWithData([{
+            label: `Wind Speed`,
+            value: `${avr.averageWindSpeed}`
+        }]));
     };
 
     const displayTotalPrecipitation = (weatherModel) => {
-        // ! TODO
+        const max = weatherModel.getLastDayTotalPrecipitation();
+        const lastDay = weatherModel.getLastDayAsString();
+
+        weatherSectionTitle.innerHTML = `Weather (Last day: ${lastDay})`;
+        weatherSection.appendChild(createCardWithData([{
+            label: `Precipitation`,
+            value: `${max.totalPrecipitation}`
+        }]));
     };
 
     const displayLatestMeasurement = (weatherModel) => {
