@@ -3,36 +3,26 @@ import model from "./parent-model";
 const dataModel = (data, filter = () => true) => {
     const parentModel = model();
     const getMinTemperatureForLastDay = () => {
-        const filtered = data.filter((element) => {
-            const elementDate = new Date(element.time);
-            const now = new Date();
-            return element.type === `temperature` && elementDate.getUTCDate() === now.getDate() - 1;
-        });
-
-        const minTemperature = Math.min(...filtered.map(element => {
+        const values = parentModel.getMeasurementTypeForLastDay(data, `temperature`);
+        const minTemperature = Math.min(...values.map(element => {
             return element.value;
         }));
 
         return {
             minTemperature,
-            minTemperatureUnit: filtered[0].unit,
+            minTemperatureUnit: values[0].unit,
         }
     } 
 
     const getMaxTemperatureForLastDay = () => {
-        const filtered = data.filter((element) => {
-            const elementDate = new Date(element.time);
-            const now = new Date();
-            return element.type === `temperature` && elementDate.getUTCDate() === now.getDate() - 1;
-        });
-
-        const maxTemperature = Math.max(...filtered.map(element => {
+        const values = parentModel.getMeasurementTypeForLastDay(data, `temperature`);
+        const maxTemperature = Math.max(...values.map(element => {
             return element.value;
         }));
 
         return {
             maxTemperature,
-            maxTemperatureUnit: filtered[0].unit,
+            maxTemperatureUnit: values[0].unit,
         }
     } 
 
@@ -44,44 +34,32 @@ const dataModel = (data, filter = () => true) => {
     }
 
     const getLastDayAsString = () => {
-        const filtered = data.filter((element) => {
-            const elementDate = new Date(element.time);
-            const now = new Date();
-            return element.type === `temperature` && elementDate.getUTCDate() === now.getDate() - 1;
-        });
-        
-        const date = new Date(filtered[0].time)
+        const values = parentModel.getMeasurementTypeForLastDay(data, `temperature`);
+        const date = new Date(values[0].time)
         const dateAsString = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
         return dateAsString;
     }
 
     const getLastDayTotalPrecipitation = () => {
-        const filtered = data.filter((element) => {
-            const elementDate = new Date(element.time);
-            const now = new Date();
-            return element.type === `precipitation` && elementDate.getUTCDate() === now.getDate() - 1;
+        const values = parentModel.getMeasurementTypeForLastDay(data, `precipitation`);
+        let totalPrecipitation = 0;
+        values.map((element) => {
+            totalPrecipitation += element.value;
         });
 
-        const totalPrecipitation = Math.max(...filtered.map(element => {
-            return element.value;
-        }));
-
         return {
-            totalPrecipitation
+            totalPrecipitation: totalPrecipitation.toFixed(2),
+            unit: values[0].unit,
         }
     };
 
     const getLastDayAverageWindSpeed = () => {
-        const filtered = data.filter((element) => {
-            const elementDate = new Date(element.time);
-            const now = new Date();
-            return element.type === `wind_speed` && elementDate.getUTCDate() === now.getDate() - 1;
-        });
-
-        const averageWindSpeed = filtered.reduce((a, b) => a + b, 0) / filtered.length;
+        const values = parentModel.getMeasurementTypeForLastDay(data, `wind speed`);
+        const averageWindSpeed = (values.reduce((a, b) => a + b.value, 0) / values.length).toFixed(2);
 
         return {
-            averageWindSpeed
+            averageWindSpeed,
+            unit: values[0].unit,
         }
     };
 

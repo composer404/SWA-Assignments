@@ -16,7 +16,15 @@ const model = () => {
         }).reverse();
     };
 
-    return { getListByMeasurementType, getMeasurementTypes }
+    const getMeasurementTypeForLastDay = (values, type) => {
+        return values.filter((element) => {
+            const elementDate = new Date(element.time);
+            const now = new Date();
+            return element.type === type && elementDate.getUTCDate() === now.getDate() - 1;
+        });
+    }
+
+    return { getListByMeasurementType, getMeasurementTypes, getMeasurementTypeForLastDay }
 }
 
 export default model;

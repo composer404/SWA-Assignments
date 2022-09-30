@@ -48,23 +48,19 @@ export default window => {
 
     const displayAverageWind = (weatherModel) => {
         const avr = weatherModel.getLastDayAverageWindSpeed();
-        const lastDay = weatherModel.getLastDayAsString();
 
-        weatherSectionTitle.innerHTML = `Weather (Last day: ${lastDay})`;
         weatherSection.appendChild(createCardWithData([{
             label: `Wind Speed`,
-            value: `${avr.averageWindSpeed}`
+            value: `${avr.averageWindSpeed}${avr.unit}`
         }]));
     };
 
     const displayTotalPrecipitation = (weatherModel) => {
-        const max = weatherModel.getLastDayTotalPrecipitation();
-        const lastDay = weatherModel.getLastDayAsString();
+        const total = weatherModel.getLastDayTotalPrecipitation();
 
-        weatherSectionTitle.innerHTML = `Weather (Last day: ${lastDay})`;
         weatherSection.appendChild(createCardWithData([{
             label: `Precipitation`,
-            value: `${max.totalPrecipitation}`
+            value: `${total.totalPrecipitation}${total.unit}`
         }]));
     };
 
