@@ -1,3 +1,5 @@
+import { DateTime } from "luxon";
+
 const model = () => {
     const getMeasurementTypes = () => {
         return {
@@ -18,9 +20,9 @@ const model = () => {
 
     const getMeasurementTypeForLastDay = (values, type) => {
         return values.filter((element) => {
-            const elementDate = new Date(element.time);
-            const now = new Date();
-            return element.type === type && elementDate.getUTCDate() === now.getDate() - 1;
+            const yesterdayDate = DateTime.now().minus({days: 1}).toFormat(`yyyy/MM/dd`);
+            const elementDate = DateTime.fromISO(element.time).toFormat(`yyyy/MM/dd`);
+            return element.type === type && yesterdayDate === elementDate;
         });
     }
 
