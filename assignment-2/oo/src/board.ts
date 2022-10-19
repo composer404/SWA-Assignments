@@ -90,4 +90,27 @@ export class Board<T> {
       );
     });
   }
+
+/* ----------------- Check if pieces match ---------------- */
+
+private checkIfPiecesMatch(board: Board, position:Position): boolean 
+{
+  const top1 = {x: position.x - 1, y: position.y};
+  const top2 = {x: position.x - 2, y: position.y};
+  const bottom1 = {x: position.x + 1, y: position.y};
+  const bottom2 = {x: position.x + 2, y: position.y};
+
+  const left1 = {x: position.x, y: position.y - 1};
+  const left2 = {x: position.x, y: position.y - 2};
+  const right1 = {x: position.x, y: position.y + 1};
+  const right2 = {x: position.x, y: position.y + 2};
+  
+//   if (board.doCandiesMatch (position, right1) && board.doCandiesMatch(cellPos, right2)) {
+//     return true;
+// }
+}
+
+
+
+  
 }
