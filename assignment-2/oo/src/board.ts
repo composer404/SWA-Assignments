@@ -15,7 +15,7 @@ export type Piece<T> = {
   position: Position;
 };
 
-export type BoardEvent<T> = {};
+export type BoardEvent<T> = [];
 
 export type BoardListener<T> = {};
 
@@ -42,7 +42,8 @@ export class Board<T> {
   }
 
   canMove(first: Position, second: Position): boolean {
-    return false;
+    return this.isMoveLegal(first, second);
+    // return false;
   }
 
   move(first: Position, second: Position) {}
@@ -50,6 +51,101 @@ export class Board<T> {
   /* -------------------------------------------------------------------------- */
   /*                                   HELPERS                                  */
   /* -------------------------------------------------------------------------- */
+
+  private swapPieces(first: Position, second: Position) {
+    const firstPiece = this.findPieceOnPosition(first);
+    const secondPiece = this.findPieceOnPosition(second);
+
+    const firstIndex = this.pieces.indexOf(firstPiece);
+    const secondIndex = this.pieces.indexOf(secondPiece);
+
+    const firstPieceValue = firstPiece.value;
+    const secondPieceValue = secondPiece.value;
+
+    this.pieces[firstIndex].value = secondPieceValue;
+    this.pieces[secondIndex].value = firstPieceValue;
+  }
+
+  // private findPieceByPosition(position: Position): Piece<T> {
+  //   return this.pieces.find((element) => {
+  //       return element.position.row === position.row && element.position.col === position.col;
+  //   });
+  // }
+
+  private isMoveLegal(
+    firstPosition: Position,
+    secondPosition: Position
+  ): boolean {
+    if (
+      !this.isPositionOutsideBoard(firstPosition) ||
+      !this.isPositionOutsideBoard(secondPosition)
+    ) {
+      return false;
+    }
+    if (
+      firstPosition.col === secondPosition.col &&
+      firstPosition.row === secondPosition.row
+    ) {
+      return false;
+    }
+
+    if (
+      firstPosition.col !== secondPosition.col &&
+      firstPosition.row !== secondPosition.row
+    ) {
+      return false;
+    }
+
+    if (firstPosition.col === secondPosition.col) {
+      this.swapPieces(firstPosition, secondPosition);
+      const isFirstRowMatch = this.findMatchInRows(firstPosition.row);
+      const isSecondRowMatch = this.findMatchInRows(secondPosition.row);
+      if (!isFirstRowMatch && !isSecondRowMatch) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  private isMatch() {}
+
+  private findMatchInRows(row?: number) {
+    if (row > this.height) {
+      return;
+    }
+    if (!row) {
+      row = 0;
+    }
+    const piecesInRow = this.pieces.filter((element) => {
+      return element.position.row === row;
+    });
+    const pieces = this.countPiecesInArray(piecesInRow);
+
+    let matchFound = false;
+    for (const piece in pieces) {
+      if (pieces[piece] >= 3) {
+        matchFound = true;
+      }
+    }
+
+    return matchFound;
+  }
+
+  private countPiecesInArray(arr: Piece<T>[]): {} {
+    const result = {} as any;
+
+    arr.forEach((element) => {
+      if (result[element.value]) {
+        result[element.value] += 1;
+      } else {
+        result[element.value] = 1;
+      }
+    });
+    return result;
+  }
+
+  private findMatchInColumns(column: number) {}
 
   /* -------------- Checks if given position is outside the board ------------- */
 
