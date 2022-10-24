@@ -55,7 +55,7 @@ export class Board<T> {
     //     if (first.col == second.col || first.row == second.row) 
     //     {
     //         this.swapPieces(first, second);
-    //         let m = this.checkRowForThree(first, second);
+    //         let m = this.isMatch(first, second);
     //         this.swapPieces(first, second);
     //         return m;      
     //     }
@@ -122,12 +122,18 @@ export class Board<T> {
       if (!isFirstRowMatch && !isSecondRowMatch) {
         return false;
       }
+
     }
 
     return true;
   }
 
-  private isMatch() {}
+  private isMatch(first: Position, second: Position) {
+    // let isFirstHorizontalMatch = this.findMatchInRows(first.row, true);
+    // let isSecondHorizontalMatch = this.findMatchInRows(second.row, true);
+    // let match = (isFirstHorizontalMatch || isSecondHorizontalMatch || isFirstVerticalMatch || isSecondVerticalMatch)
+    // return match;
+  }
 
    findMatchInRows(row?: number) {
     if (row > this.height) {
@@ -268,8 +274,6 @@ for(let i=0; i< width; i++)
   let  rowOfThree = [i, i+1, i+2];
   let decidedPiece = pieces[i];
   const isBlank = pieces[i] === '';
-  const notValid = [6, 7, 14, 15, 22, 23, 30, 31, 38, 39, 46, 47, 54, 55];
-  if (notValid.includes(i)) continue;
   
   if(rowOfThree.every(index => pieces[index] === decidedPiecer && !isBlank)) {
     rowOfThree.forEach(index => {
@@ -279,23 +283,7 @@ for(let i=0; i< width; i++)
 }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    
 
 
 //--------------------------------------------------------------------------
