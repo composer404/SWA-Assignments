@@ -1,5 +1,4 @@
 
-
 export type Generator<T> = { next: () => T };
 
 export type Position = {
@@ -34,7 +33,9 @@ export class Board<T> {
     this.initBoardFill(generator);
   }
 
-  addListener(listener: BoardListener<T>) {}
+  addListener(listener: BoardListener<T>) {
+    
+  }
 
   piece(p: Position): T | undefined {
     if (!this.isPositionOutsideBoard(p)) {
@@ -46,14 +47,19 @@ export class Board<T> {
   canMove(first: Position, second: Position): boolean {
     return this.isMoveLegal(first, second);
     // return false;
-    if (first.col == second.col || first.row == second.row) 
-        {
-            this.swapPieces(first, second);
-            let m = this.isMatch(first, second);
-            this.swapPieces(first, second);
-            return m;      
-        }
-        return false;
+    // if (!this.isPositionOutsideBoard(first) || !this.isPositionOutsideBoard(second)) 
+    //     {
+    //         return false;
+    //     }
+
+    //     if (first.col == second.col || first.row == second.row) 
+    //     {
+    //         this.swapPieces(first, second);
+    //         let m = this.checkRowForThree(first, second);
+    //         this.swapPieces(first, second);
+    //         return m;      
+    //     }
+    //     return false;
   }
 
   move(first: Position, second: Position) {
@@ -157,47 +163,29 @@ export class Board<T> {
     });
     return result;
   }
-
-  private findMatchInColumns(rowI:boolean, num:number) {
-    let match = false;
-    const p = this.pieces.filter((element) => {
-      if(rowI){
-        return element.position.row == num;
-      }
-      else {
-        return element.position.col == num;
-      }
-      
+//====================here
+  private findMatchInColumns(col?:number) {
+    if(col> this.width)
+    {
+      return;
+    }
+    if(!col){
+      col=0;
+    }
+    const piecesInCol = this.pieces.filter((element)=>{
+      return element.position.column === col;
     });
-
-    for (var j = 0; j < p.length; j++){
-      if (j == 0){
-        if(p[j].value == p[j+1].value && p[j].value == p[j+2].value)
-        {
-          match = true;
-          break;
-        }
-      }
-      else if (j > 0 && j != (p.length - 1)){
-        if(p[j].value == p[j+1].value && p[j].value == p[j-1].value)
-        {
-          match = true;
-          break;
-        }
+    const pieces = this.countPiecesInArray(piecesInCol);
+    let matchFound = false;
+    for (const piece in pieces) {
+      if (pieces[piece] >= 3) {
+        matchFound = true;
       }
     }
-    return match;
-  }
 
-  private isMatch(first: Position, second: Position)
-  {
-    let isFirstHorizontalMatch = this.findMatch(first.row, true);
-    let isSecondHorizontalMatch = this.findMatch(second.row, true);
-    let isFirstVerticalMatch = this.findMatch(first.col, false);
-    let isSecondVerticalMatch = this.findMatch(second.col, false);
-    let match = (isFirstHorizontalMatch || isSecondHorizontalMatch || isFirstVerticalMatch || isSecondVerticalMatch)
-    return match;
+    return matchFound;
   }
+ 
   /* -------------- Checks if given position is outside the board ------------- */
 
   private isPositionOutsideBoard(p: Position): boolean {
@@ -239,6 +227,78 @@ export class Board<T> {
   }
 
 /* ----------------- Check if pieces match ---------------- */
+
+// pieceDragged: Piece;
+// pieceReplaced: Piece;
+// pieceIdDragged: Piece;
+// pieceIdReplaced: Piece;
+
+// pieces.forEach((piece: Piece) => {
+//   piece.addListener('dragstart',dragStart)});
+
+// this.pieces.forEach(piece => piece.addListener('dragend',dragEnd)),
+// this.pieces.forEach(piece => piece.addListener('dragover',dragOver)),
+// this.pieces.forEach(piece => piece.addListener('dragenter',dragEnter)),
+// this.pieces.forEach(piece => piece.addListener('dragleave',dragLeave)),
+// this.pieces.forEach(piece => piece.addListener('drop',dragDrop)),
+
+
+
+//  dragStart():Piece<T>{
+//   pieceIdDragged = parseInt(this.id)
+//   // this.style.backgroundImage = ''
+// }
+
+//  dragOver(e):Piece<T> {
+//   e.preventDefault()
+// }
+
+//  dragEnter(e) :Piece<T>{
+//   e.preventDefault()
+// }
+
+//  dragLeave():Piece<T> {
+//   this.piece = ''
+// }
+
+
+private checkRowForThree(){
+for(let i=0; i< width; i++)
+{
+  let  rowOfThree = [i, i+1, i+2];
+  let decidedPiece = pieces[i];
+  const isBlank = pieces[i] === '';
+  const notValid = [6, 7, 14, 15, 22, 23, 30, 31, 38, 39, 46, 47, 54, 55];
+  if (notValid.includes(i)) continue;
+  
+  if(rowOfThree.every(index => pieces[index] === decidedPiecer && !isBlank)) {
+    rowOfThree.forEach(index => {
+    pieces[index] = '';
+    });
+}
+}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//--------------------------------------------------------------------------
 
 // private checkIfPiecesMatch(board: Board, position:Position): boolean 
 // {
