@@ -66,8 +66,8 @@ export class Board<T> {
     //     return false;
   }
 
-  move(first: Position, second: Position) {
-    // return this.checkIfPiecesMatch(first,second);
+  move() {
+    // return this.dragEnd(first,second);
   }
 
   /* -------------------------------------------------------------------------- */
@@ -242,38 +242,78 @@ export class Board<T> {
     });
   }
 
-  /* ----------------- Check if pieces match ---------------- */
+  /* ----------------- Moving  ---------------- */
 
-  // pieceDragged: Piece;
-  // pieceReplaced: Piece;
-  // pieceIdDragged: Piece;
-  // pieceIdReplaced: Piece;
+  pieceDragged: Piece;
+  pieceReplaced: Piece;
+  pieceIdDragged: Piece;
+  pieceIdReplaced: Piece;
 
-  // pieces.forEach((piece: Piece) => {
-  //   piece.addListener('dragstart',dragStart)});
+ private dragStart():Piece<T>{
+    for(let piece of this.pieces){
+      piece.addListener('dragstart',dragStart);
+    }
+    pieceIdDragged = parseInt(this.id)
+  }
 
-  // this.pieces.forEach(piece => piece.addListener('dragend',dragEnd)),
-  // this.pieces.forEach(piece => piece.addListener('dragover',dragOver)),
-  // this.pieces.forEach(piece => piece.addListener('dragenter',dragEnter)),
-  // this.pieces.forEach(piece => piece.addListener('dragleave',dragLeave)),
-  // this.pieces.forEach(piece => piece.addListener('drop',dragDrop)),
+  private dragOver(e):Piece<T> {
+    for(let piece of this.pieces){
+      piece.addListener('dragover',dragOver);
+    }
+    e.preventDefault()
+  }
 
-  //  dragStart():Piece<T>{
-  //   pieceIdDragged = parseInt(this.id)
-  //   // this.style.backgroundImage = ''
-  // }
+  private dragEnter(e):Piece<T> {
+    for(let piece of this.pieces){
+      piece.addListener('dragenter',dragEnter);
+    }
+    e.preventDefault()
+  }
 
-  //  dragOver(e):Piece<T> {
-  //   e.preventDefault()
-  // }
+  private dragLeave():Piece<T> {
+    for(let piece of this.pieces){
+      piece.addListener('dragleave',dragLeave);
+    }
+    this.piece = '';
+  }
 
-  //  dragEnter(e) :Piece<T>{
-  //   e.preventDefault()
-  // }
+  private dragDrop(pieceIdReplaced: Piece):Piece<T> {
+    for(let piece of this.pieces){
+      piece.addListener('drop',dragDrop);
+    }
+    pieceIdReplaced = parseInt(this.id);
+  }
 
-  //  dragLeave():Piece<T> {
-  //   this.piece = ''
-  // }
+  private dragEnd():Piece<T> {
+    for(let piece of this.pieces){
+      piece.addListener('dragend',dragEnd);
+    }
+    let validMoves = [ pieceIdDragged -1 ,  pieceIdDragged -width,  pieceIdDragged +1,  pieceIdDragged +width];
+    let validMove = validMoves.includes(pieceIdReplaced);
+
+    if (pieceIdReplaced && validMove) {
+      pieceIdReplaced = null;
+    }  else if (pieceIdReplaced && !validMove) {
+       pieces[pieceIdReplaced] = pieceReplaced;
+       pieces[pieceIdDragged] = pieceDragged;
+    } else  pieces[pieceIdDragged] = pieceDragged;
+  }
+
+  private moveIntoSquareBelow() {
+    for (i = 0; i < 55; i ++) {
+        if(pieces[i + width] === '') {
+          pieces[i + width] = pieces[i];
+          pieces[i] = '';
+            const firstRow = [0, 1, 2, 3, 4, 5, 6, 7];
+            const isFirstRow = firstRow.includes(i);
+            if (isFirstRow && (pieces[i] === '')) {
+              let randomPiece = Math.floor(Math.random() * pieces.length);
+              pieces[i] = pieces[randomPiece];
+            }
+        }
+    }
+}
+  
   /* ----------------------- ROW MATCHES WITH RECURSTION ---------------------- */
 
   private getAllColumnMatches() {
@@ -454,6 +494,29 @@ export class Board<T> {
       return element.position.col === columnIndex;
     });
   }
+
+
+  private clearMatches(matchingPieces: Piece<T>[], value: T) {
+    if (matchingPieces.length === 0) {
+        return false;
+    }
+
+    for (var i in matchingPieces) {
+        var pieces = matchingPieces[i];
+        for (var p in pieces) {
+            pieces[p].clear();
+        }
+    }
+
+    return true;
+};
+ 
+
+
+
+
+
+  
 
   // private checkRowForThree() {
   //   for (let i = 0; i < width; i++) {
