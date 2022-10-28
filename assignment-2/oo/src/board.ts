@@ -64,10 +64,16 @@ export class Board<T> {
     //         return m;
     //     }
     //     return false;
+      
   }
 
-  move() {
+
+  move( pos:Position, newPos:Position):Board<T> {
     // return this.dragEnd(first,second);
+   // return this.moveArrayItemToNewIndex(this.pieces,pos,newPos);
+  //  let pieces: Piece<T>[] = [];
+  //  return pieces.this.moveArrayItemToNewIndex(pos,newPos);
+   
   }
 
   /* -------------------------------------------------------------------------- */
@@ -313,7 +319,30 @@ export class Board<T> {
         }
     }
 }
-  
+
+private moveArrayItemToNewIndex(pos:Position, newPos:Position,pieces:Piece<T>[]) {
+   
+  // if (newPos >= pieces.length) {
+  //     var k = newPos - pieces.length + 1;
+  //     while (k--) {
+  //         pieces.push(undefined);
+  //     }
+  // }
+  // pieces.splice(newPos, 0, pieces.splice(pos, 1)[0]);
+  // return pieces; 
+  if( newPos === pos ) return pieces;
+
+  var target =pieces[pos];                         
+  var increment = newPos < pos ? -1 : 1;
+
+  for(var k = pos; k != newPos; k += increment){
+    pieces[k] = pieces[k + increment];
+  }
+  pieces[newPos] = target;
+  return pieces;
+};
+
+
   /* ----------------------- ROW MATCHES WITH RECURSTION ---------------------- */
 
   private getAllColumnMatches() {
@@ -510,13 +539,7 @@ export class Board<T> {
 
     return true;
 };
- 
 
-
-
-
-
-  
 
   // private checkRowForThree() {
   //   for (let i = 0; i < width; i++) {
