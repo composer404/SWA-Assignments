@@ -1,13 +1,15 @@
+// @ts-ignore
+import {CheckButton, Form, Input} from "react-validation";
 import { Navigate, useNavigate } from 'react-router-dom';
 import React, { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import CheckButton from "react-validation/build/button";
-import Form from "react-validation/build/form";
-import Input from "react-validation/build/input";
+// import CheckButton from "react-validation/build/button";
+// import Form from "react-validation/build/form";
+// import Input from "react-validation/build/input";
 import { login } from "../actions/auth";
 
-const required = (value) => {
+const required = (value: string) => {
   if (!value) {
     return (
       <div className="alert alert-danger" role="alert">
@@ -17,7 +19,7 @@ const required = (value) => {
   }
 };
 
-const Login = (props) => {
+const Login = (props: any) => {
   let navigate = useNavigate();
 
   const form = useRef();
@@ -27,30 +29,30 @@ const Login = (props) => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const { isLoggedIn } = useSelector(state => state.auth);
-  const { message } = useSelector(state => state.message);
+  const { isLoggedIn } = useSelector((state: any) => state.auth);
+  const { message } = useSelector((state: any) => state.message);
 
   const dispatch = useDispatch();
 
-  const onChangeUsername = (e) => {
+  const onChangeUsername = (e: any) => {
     const username = e.target.value;
     setUsername(username);
   };
 
-  const onChangePassword = (e) => {
+  const onChangePassword = (e: any) => {
     const password = e.target.value;
     setPassword(password);
   };
 
-  const handleLogin = (e) => {
+  const handleLogin = (e: any) => {
     e.preventDefault();
 
     setLoading(true);
 
-    form.current.validateAll();
+    (form as any).current.validateAll();
 
-    if (checkBtn.current.context._errors.length === 0) {
-      dispatch(login(username, password))
+    if ((checkBtn as any).current.context._errors.length === 0) {
+      dispatch((login(username, password) as any))
         .then(() => {
           navigate("/profile");
           window.location.reload();

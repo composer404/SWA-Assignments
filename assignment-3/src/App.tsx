@@ -49,7 +49,7 @@ const App = () => {
   const [showModeratorBoard, setShowModeratorBoard] = useState(false);
   const [showAdminBoard, setShowAdminBoard] = useState(false);
 
-  const { user: currentUser } = useSelector((state) => state.auth);
+  const { user: currentUser } = useSelector((state: any) => state.auth);
   const dispatch = useDispatch();
 
   let location = useLocation();
@@ -61,7 +61,7 @@ const App = () => {
   }, [dispatch, location]);
 
   const logOut = useCallback(() => {
-    dispatch(logout());
+    dispatch((logout() as any));
   }, [dispatch]);
 
   useEffect(() => {

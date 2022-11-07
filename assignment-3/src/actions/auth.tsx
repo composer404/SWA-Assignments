@@ -9,7 +9,7 @@ import {
 
 import AuthService from "../services/auth.service";
 
-export const register = (username, password) => (dispatch) => {
+export const register = (username: string, password: string) => (dispatch: any) => {
     return AuthService.register(username, password).then(
       (response) => {
         dispatch({
@@ -43,7 +43,7 @@ export const register = (username, password) => (dispatch) => {
     }
   );
 };
-export const login = (username, password) => (dispatch) => {
+export const login = (username: string, password: string) => (dispatch: any) => {
     return AuthService.login(username, password).then(
       (data) => {
         dispatch({
@@ -73,7 +73,7 @@ export const login = (username, password) => (dispatch) => {
     }
   );
 };
-  export const logout = () => (dispatch) => {
+  export const logout = () => (dispatch: any) => {
     AuthService.logout();
   
     dispatch({

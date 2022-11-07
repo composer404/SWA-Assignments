@@ -6,13 +6,13 @@ import {
     REGISTER_SUCCESS,
 } from "../actions/types";
 
-const user = JSON.parse(localStorage.getItem("user"));
+const user = JSON.parse(localStorage.getItem("user") as string);
   
   const initialState = user
     ? { isLoggedIn: true, user }
     : { isLoggedIn: false, user: null };
   
-  export default function (state = initialState, action) {
+  export default function (state = initialState, action: any) {
     const { type, payload } = action;
   
     switch (type) {
