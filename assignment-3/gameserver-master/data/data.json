@@ -1,10 +1,82 @@
 {
   "users": [
-    { 
+    {
       "username": "admin",
       "password": "secret",
-      "id" : 0,
-      "admin": true 
+      "id": 0,
+      "admin": true
+    },
+    {
+      "username": "",
+      "password": "",
+      "id": 1,
+      "admin": false
+    },
+    {
+      "username": "test",
+      "password": "test",
+      "id": 2,
+      "admin": false
+    },
+    {
+      "username": "test1",
+      "password": "test1",
+      "id": 3,
+      "admin": false
+    },
+    {
+      "username": "test12",
+      "password": "test1",
+      "id": 4,
+      "admin": false
+    },
+    {
+      "username": "test3",
+      "password": "test3",
+      "id": 5,
+      "admin": false
+    },
+    {
+      "username": "test123",
+      "password": "test123",
+      "id": 6,
+      "admin": false
+    },
+    {
+      "username": "test14",
+      "password": "test14",
+      "id": 7,
+      "admin": false
+    },
+    {
+      "username": "test3123",
+      "password": "test3123",
+      "id": 8,
+      "admin": false
+    },
+    {
+      "username": "test12355",
+      "password": "test12355",
+      "id": 9,
+      "admin": false
+    },
+    {
+      "username": "test123556",
+      "password": "test123556",
+      "id": 10,
+      "admin": false
+    },
+    {
+      "username": "1qwe",
+      "password": "qweeq",
+      "id": 11,
+      "admin": false
+    },
+    {
+      "username": "test123455",
+      "password": "testt51235",
+      "id": 12,
+      "admin": false
     }
   ],
   "games": []

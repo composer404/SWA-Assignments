@@ -75,11 +75,9 @@ const App = () => {
   }, [currentUser]);
 
   return (
-    <div>
+    <div className="h-100">
       <nav className="navbar navbar-expand navbar-dark bg-dark">
-        <Link to={"/"} className="navbar-brand">
-          xxxxxxxxxx
-        </Link>
+        <Link to={"/"} className="navbar-brand"></Link>
         <div className="navbar-nav mr-auto">
           <li className="nav-item">
             <Link to={"/home"} className="nav-link">
@@ -119,8 +117,8 @@ const App = () => {
             </li>
 
             <li className="nav-item">
-              <Link to={"/register"} className="nav-link">
-                Sign Up
+              <Link to={"/signup"} className="nav-link">
+                Create account
               </Link>
             </li>
           </div>
@@ -132,7 +130,7 @@ const App = () => {
           <Route path="/" element={<Home />} />
           <Route path="/home" element={<Home />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/signUp" element={<SignUp />} />
+          <Route path="/signup" element={<SignUp />} />
           <Route path="/profile" element={<Profile />} />
         </Routes>
       </div>

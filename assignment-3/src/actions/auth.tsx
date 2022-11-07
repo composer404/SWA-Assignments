@@ -18,7 +18,7 @@ export const register = (username: string, password: string) => (dispatch: any) 
   
         dispatch({
           type: SET_MESSAGE,
-          payload: response.data.message,
+          payload: response.data.message || `Account created successfully`,
         });
   
         return Promise.resolve();
