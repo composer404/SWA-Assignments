@@ -121,6 +121,12 @@ const App = () => {
                 Create account
               </Link>
             </li>
+
+            <li className="nav-item">
+              <a href="/login" className="nav-link" onClick={logOut}>
+                LogOut
+              </a>
+            </li>
           </div>
         )}
       </nav>
