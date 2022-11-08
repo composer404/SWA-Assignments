@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 
-import GameService from "../services/game.service";
+import { getGames } from "../services/game.service";
 
 const Home = () => {
 
   const [content, setContent] = useState("");
 
   useEffect(() => {
-    GameService.getGames().then(
+    getGames().then(
       (response: any) => {
         setContent(response.data);
       },

@@ -1,3 +1,5 @@
+import axios from "axios";
+
 export type Generator<T> = { next: () => T };
 
 export type Position = {
@@ -44,6 +46,11 @@ export type MoveResult<T> = {
   effects: Effect<T>[];
 };
 
+const API_URL = "http://localhost:9090/";
+
+export function getGames() {
+    return axios.get(API_URL + "games");
+  };
 /* ----------------------------- GIVEN FUNCTIONS ---------------------------- */
 
 export function create<T>(

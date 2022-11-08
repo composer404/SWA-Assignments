@@ -128,6 +128,12 @@ const App = () => {
                 LogOut
               </a>
             </li>
+
+            <li className="nav-item">
+              <a href="/game" className="nav-link" onClick={logOut}>
+                Play
+              </a>
+            </li>
           </div>
         )}
       </nav>
