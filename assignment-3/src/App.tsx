@@ -38,6 +38,7 @@ import { Link, Route, Routes, useLocation } from "react-router-dom";
 import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
+import Game from "./components/Game";
 import Home from "./components/Home";
 import Login from "./components/Login";
 import Profile from "./components/Profile";
@@ -132,6 +133,7 @@ const App = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/game" element={<Game />} />
         </Routes>
       </div>
 
