@@ -26,6 +26,18 @@
   color: rgb(112, 76, 182);
 }
 
+
+.board-item {
+  width: 100px;
+  height: 100px;
+  border: 1px solid black;
+  cursor: pointer;
+}
+
+.board-item-selected {
+  border: 5px solid black;
+}
+
 @keyframes App-logo-float {
   0% {
     transform: translateY(0);

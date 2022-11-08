@@ -80,6 +80,16 @@ export function canMove<T>(
   return isMoveLegal(board, first, second);
 }
 
+export function initalScan<T>(generator: Generator<T>, board: Board<T>) {
+  const effects: any = [];
+  scanBoard(board, generator, effects);
+
+  return {
+    board,
+    effects,
+  };
+}
+
 export function move<T>(
   generator: Generator<T>,
   board: Board<T>,

@@ -1,13 +1,12 @@
 // import { useStore } from "react-redux";
 
+import { clearSelection, createBoard, selectFirstItem, selectSecondItem } from '../actions/game'
 import { useDispatch, useSelector } from "react-redux";
-
-import { createBoard } from '../actions/game'
 
 const Game = () => {
     const dispatch = useDispatch();
 
-    const { board } = useSelector((state: any) => {
+    const { board, firstItem, generator, points } = useSelector((state: any) => {
         return state.game;
     });
 
@@ -15,17 +14,47 @@ const Game = () => {
         dispatch((createBoard()) as any)
     };
 
+    const handleClearSelection = () => {
+        dispatch((clearSelection()) as any)
+    }
+
+    const handleSelecteItem = (item: any) => {
+        if (!firstItem) {
+            dispatch((selectFirstItem(item)) as any)
+            return;
+        }
+
+        dispatch((selectSecondItem(board, generator, firstItem, item)) as any)
+    }
+
+    const isSelectedElement = (element: any) => {
+        if (firstItem?.position.col === element.position.col && firstItem?.position.row === element.position.row) {
+            return true;
+        }
+    }
+
     const renderRow = (elements: any[]) => {
         const rowToDisaply = [];
 
         for(let i = 0 ; i < elements.length; i++) {
-            rowToDisaply.push(<td key={i}>{elements[i].value}</td>)
-        }
+            let selectedStyle = ``;
+            const style = {
+                backgroundColor: elements[i].value,
+            };
 
+            if (isSelectedElement(elements[i])) {
+                selectedStyle = `board-item-selected`;
+            }
+
+            rowToDisaply.push(<td onClick={() => handleSelecteItem({ ...elements[i]})} key={i} className={"board-item " + selectedStyle} style={style}></td>)
+        }
         return rowToDisaply;
     }
 
     const renderBoard = () => {
+        if(!board) {
+            return;
+        }
         const rows = [];
         const boardToDisplay = [];
 
@@ -38,18 +67,17 @@ const Game = () => {
                 {renderRow(rows[i])}
             </tr>);
         }
-
-        console.log(`boardtodisplay`, boardToDisplay);
         return boardToDisplay;
     }
 
     return (
         <div>
-            <button onClick={handleCreateBoard}>Generate board</button>
-            <div>Game</div>
+            <button className='btn btn-primary m-2' onClick={handleCreateBoard}>Generate board</button>
+            <button className='btn btn-primary m-2' onClick={handleClearSelection}>Clear selection</button>
+            <div>Points {points}</div>
             <table>
                 <tbody>
-                    {board && renderBoard()}
+                    {renderBoard()}
                 </tbody>
             </table>
         </div>
