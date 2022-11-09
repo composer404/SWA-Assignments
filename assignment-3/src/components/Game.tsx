@@ -1,14 +1,10 @@
-// import { useStore } from "react-redux";
-
 import { clearSelection, createBoard, selectFirstItem, selectSecondItem } from '../actions/game'
-import { useDispatch, useSelector } from "react-redux";
+import { shallowEqual, useDispatch, useSelector } from "react-redux";
 
 const Game = () => {
     const dispatch = useDispatch();
 
-    const { board, firstItem, generator, points } = useSelector((state: any) => {
-        return state.game;
-    });
+    const { board, firstItem, generator, points } = useSelector((state: any) => { return state.game}, shallowEqual);
 
     const handleCreateBoard = () => {
         dispatch((createBoard()) as any)

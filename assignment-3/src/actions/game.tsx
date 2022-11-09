@@ -45,7 +45,7 @@ export const selectSecondItem = (board: any, generator: any, firstItem: any, sec
         return effect.kind === `Match`;
     });
 
-    // Dispatching points for each match
+    //Dispatching points for each match
     matches.map(() => {
         return dispach({
             type: ADD_SCORE,
