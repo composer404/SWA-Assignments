@@ -1,9 +1,12 @@
 /* eslint-disable import/no-anonymous-default-export */
 
-import { ADD_SCORE, BOARD_CREATED, CLEAR_SELECTION, FIRST_ITEM_SELECTED, SECOND_ITEM_SELECTED } from "../actions/types";
+import { ADD_SCORE, BOARD_CREATED, CLEAR_CURRENT, CLEAR_SELECTION, FIRST_ITEM_SELECTED, SECOND_ITEM_SELECTED } from "../actions/types";
+
+const gameId = JSON.parse(localStorage.getItem("currentGameId") as string);
 
 const initialState = {
     points: 0,
+    gameId,
 };
 
 export default function (state = initialState, action: any) {
@@ -14,9 +17,10 @@ export default function (state = initialState, action: any) {
         return {
             ...state,
             board: payload.board,
+            gameId: payload.id,
             generator: payload.generator,
-            firstItem: null,
-            secondItem: null,
+            firstItem: payload.firstItem,
+            points: payload.score
         }
         case FIRST_ITEM_SELECTED: 
         return {
@@ -33,6 +37,15 @@ export default function (state = initialState, action: any) {
             return {
                 ...state,
                 firstItem: null,
+            }
+        case CLEAR_CURRENT:
+            return {
+                ...state,
+                board: null,
+                gameId: null,
+                generator: null,
+                firstItem: null,
+                points: 0
             }
         case ADD_SCORE:
             return {

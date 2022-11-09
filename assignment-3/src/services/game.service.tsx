@@ -49,6 +49,9 @@ export type MoveResult<T> = {
 
 const API_URL = "http://localhost:9090/";
 
+
+/* ---------------------------- API COMMUNICATION --------------------------- */
+
 export function getGames() {
     return axios.get(API_URL + "games", {
       params: {
@@ -56,6 +59,50 @@ export function getGames() {
       }
     });
   };
+
+export async function createGame(userId: number) {
+  return axios.post(API_URL + "games", {
+      user: {
+        id: userId,
+      }
+  }, {
+    params: {
+      ...getAuthHeader()
+    }
+  }).then((response: any) => {
+    if(response.data.id)
+    {
+      localStorage.setItem(`currentGameId`, response.data.id);
+    }
+    return response.data;
+  })
+}
+
+
+export function updateGame(id: number, body: any) {
+  axios.patch(API_URL + `games/${id}`, {
+    ...body
+  }, {
+    params: {
+      ...getAuthHeader()
+    }
+  })
+}
+
+export function clearCurrent() {
+  localStorage.removeItem("currentGameId");
+}
+
+export async function getGame(id: number) {
+  return axios.get(API_URL + `games/${id}`, {
+    params: {
+      ...getAuthHeader()
+    }
+  }).then((response) => {
+    return response.data;
+  })
+}
+
 /* ----------------------------- GIVEN FUNCTIONS ---------------------------- */
 
 export function create<T>(
@@ -526,6 +573,19 @@ function swapPieces<T>(board: Board<T>, first: Position, second: Position) {
 
   const firstIndex = board.pieces.indexOf(firstPiece );
   const secondIndex = board.pieces.indexOf(secondPiece);
+
+  if (!(board.pieces as any).swapProperties) {
+    (board.pieces as any).swapProperties = (
+      firstIndex: number,
+      secondIndex: number,
+      propertyToSwap: string
+    ) => {
+      const firstPieceValue = (board.pieces as any)[firstIndex][propertyToSwap];
+      const secondPieceValue = (board.pieces as any)[secondIndex][propertyToSwap];
+      (board.pieces as any)[firstIndex][propertyToSwap] = secondPieceValue;
+      (board.pieces as any)[secondIndex][propertyToSwap] = firstPieceValue;
+    };
+  }
 
   (board.pieces as any).swapProperties(firstIndex, secondIndex, `value`);
 }

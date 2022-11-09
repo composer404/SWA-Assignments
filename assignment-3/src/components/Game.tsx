@@ -1,4 +1,4 @@
-import { clearSelection, createBoard, selectFirstItem, selectSecondItem } from '../actions/game'
+import { clearCurrentGame, clearSelection, createBoard, selectFirstItem, selectSecondItem } from '../actions/game'
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 
 import { Navigate } from 'react-router-dom';
@@ -6,28 +6,28 @@ import { Navigate } from 'react-router-dom';
 const Game = () => {
     const dispatch = useDispatch();
 
-    const { board, firstItem, generator, points } = useSelector((state: any) => { return state.game}, shallowEqual);
-    const { isLoggedIn } = useSelector((state: any) => state.auth);
+    const { board, firstItem, generator, points, gameId } = useSelector((state: any) => { return state.game}, shallowEqual);
+    const { isLoggedIn, user } = useSelector((state: any) => state.auth);
 
     if (!isLoggedIn) {
       return <Navigate to="/login" />;
     }
 
-    const handleCreateBoard = () => {
-        dispatch((createBoard()) as any)
+    const handleCreateBoard = (clearCurrent: boolean) => {
+        dispatch((createBoard(user.userId, gameId, clearCurrent)) as any)
     };
 
     const handleClearSelection = () => {
-        dispatch((clearSelection()) as any)
+        dispatch((clearSelection(gameId)) as any)
     }
 
     const handleSelecteItem = (item: any) => {
         if (!firstItem) {
-            dispatch((selectFirstItem(item)) as any)
+            dispatch((selectFirstItem(item, gameId)) as any)
             return;
         }
 
-        dispatch((selectSecondItem(board, generator, firstItem, item)) as any)
+        dispatch((selectSecondItem(board, generator, firstItem, item, gameId, points)) as any)
     }
 
     const isSelectedElement = (element: any) => {
@@ -75,7 +75,10 @@ const Game = () => {
 
     return (
         <div>
-            <button className='btn btn-primary m-2' onClick={handleCreateBoard}>Generate board</button>
+            {gameId && (
+                 <button className='btn btn-primary m-2' onClick={() => handleCreateBoard(false)}>Continue</button>
+            )}
+            <button className='btn btn-primary m-2' onClick={() => handleCreateBoard(true)}>Generate board</button>
             <button className='btn btn-primary m-2' onClick={handleClearSelection}>Clear selection</button>
             <div>Points {points}</div>
             <table>

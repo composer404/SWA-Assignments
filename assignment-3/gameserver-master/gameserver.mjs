@@ -1,8 +1,8 @@
-import express from 'express'
+import { JSONFile } from 'lowdb/node'
+import { Low } from 'lowdb'
 import body_parser from 'body-parser'
 import crypto from 'node:crypto'
-import { Low } from 'lowdb'
-import { JSONFile } from 'lowdb/node'
+import express from 'express'
 
 const app = express()
 app.use(express.static('static'))
@@ -47,7 +47,14 @@ const createDb = low => {
   const games = () => data.games
   const game = id => data.games.find(g => g.id === id)
   const createGame = user => {
-    const game = { user: user.id, id: data.games.length + 1, score: 0, completed: false }
+    const game = { 
+      user: user.id, 
+      id: data.games.length + 1, 
+      score: 0, 
+      completed: false, 
+      board: undefined,
+      firstSelectedItem: undefined,
+    }
     data.games.push(game)
     low.write()
     return game
