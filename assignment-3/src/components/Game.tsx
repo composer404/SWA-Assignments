@@ -1,10 +1,17 @@
 import { clearSelection, createBoard, selectFirstItem, selectSecondItem } from '../actions/game'
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 
+import { Navigate } from 'react-router-dom';
+
 const Game = () => {
     const dispatch = useDispatch();
 
     const { board, firstItem, generator, points } = useSelector((state: any) => { return state.game}, shallowEqual);
+    const { isLoggedIn } = useSelector((state: any) => state.auth);
+
+    if (!isLoggedIn) {
+      return <Navigate to="/login" />;
+    }
 
     const handleCreateBoard = () => {
         dispatch((createBoard()) as any)

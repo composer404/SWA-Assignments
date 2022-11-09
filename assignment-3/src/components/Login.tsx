@@ -64,8 +64,7 @@ const validatePassword = (e: any) => {
 const handleLogin = () => {
   dispatch((login(username, password)) as any)
   .then(() => {
-    navigate("/home");
-    //  window.location.reload();
+    navigate("/game");
       setSuccessful(true);
   })
   .catch(() => {

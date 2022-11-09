@@ -14,10 +14,10 @@ import { clearMessage } from "./actions/message";
 import { logout } from "./actions/auth";
 
 const App = () => {
-  const [showModeratorBoard, setShowModeratorBoard] = useState(false);
-  const [showAdminBoard, setShowAdminBoard] = useState(false);
+  // const [showModeratorBoard, setShowModeratorBoard] = useState(false);
+  // const [showAdminBoard, setShowAdminBoard] = useState(false);
 
-  const { user: currentUser } = useSelector((state: any) => state.auth);
+  const { isLoggedIn } = useSelector((state: any) => state.auth);
   const dispatch = useDispatch();
 
   let location = useLocation();
@@ -29,6 +29,7 @@ const App = () => {
   }, [dispatch, location]);
 
   const logOut = useCallback(() => {
+
     dispatch((logout() as any));
   }, [dispatch]);
 
@@ -45,35 +46,22 @@ const App = () => {
   return (
     <div className="h-100">
       <nav className="navbar navbar-expand navbar-dark bg-dark">
-        <Link to={"/"} className="navbar-brand"></Link>
-        <div className="navbar-nav mr-auto">
-          <li className="nav-item">
-            <Link to={"/home"} className="nav-link">
-              Home
-            </Link>
-          </li>
-
-       
-          {currentUser && (
-            <li className="nav-item">
-              <Link to={"/user"} className="nav-link">
-                User
-              </Link>
-            </li>
-          )}
-        </div>
-
-        {currentUser ? (
+        {isLoggedIn ? (
           <div className="navbar-nav ml-auto">
             <li className="nav-item">
               <Link to={"/profile"} className="nav-link">
-                {currentUser.username}
+                Profile
               </Link>
             </li>
             <li className="nav-item">
-              <a href="/login" className="nav-link" onClick={logOut}>
-                LogOut
-              </a>
+                <Link to={"/game"} className="nav-link">
+                  Play
+                </Link>
+            </li>
+            <li className="nav-item">
+              <Link to={"/login"} className="nav-link" onClick={logOut}>
+                Logout
+              </Link>
             </li>
           </div>
         ) : (
@@ -88,18 +76,6 @@ const App = () => {
               <Link to={"/signup"} className="nav-link">
                 Create account
               </Link>
-            </li>
-
-            <li className="nav-item">
-              <a href="/login" className="nav-link" onClick={logOut}>
-                Log out
-              </a>
-            </li>
-
-            <li className="nav-item">
-              <a href="/game" className="nav-link" onClick={logOut}>
-                Play
-              </a>
             </li>
           </div>
         )}
