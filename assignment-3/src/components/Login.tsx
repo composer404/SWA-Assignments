@@ -32,6 +32,7 @@ const Login = () => {
   const [successful, setSuccessful] = useState(false);
 
   const dispatch = useDispatch();
+  
 
   const onChangeUsername = (e: any) => {
     validateUsername(e);
@@ -120,7 +121,7 @@ const handleLogin = () => {
             )}
   
             {message && successful && (
-             <Navigate to="/home" />
+             <Navigate to="/" />
             )}
 
             {message && !successful && (
@@ -138,3 +139,4 @@ const handleLogin = () => {
 
 
 export default Login;
+
