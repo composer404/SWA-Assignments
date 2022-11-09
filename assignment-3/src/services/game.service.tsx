@@ -1,4 +1,5 @@
 import axios from "axios";
+import { getAuthHeader } from "../utils/auth-header"
 
 export type Generator<T> = { next: () => T };
 
@@ -49,7 +50,11 @@ export type MoveResult<T> = {
 const API_URL = "http://localhost:9090/";
 
 export function getGames() {
-    return axios.get(API_URL + "games");
+    return axios.get(API_URL + "games", {
+      params: {
+        ...getAuthHeader()
+      }
+    });
   };
 /* ----------------------------- GIVEN FUNCTIONS ---------------------------- */
 

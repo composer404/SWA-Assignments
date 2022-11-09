@@ -65,7 +65,7 @@ const handleLogin = () => {
   dispatch((login(username, password)) as any)
   .then(() => {
     navigate("/home");
-     window.location.reload();
+    //  window.location.reload();
       setSuccessful(true);
   })
   .catch(() => {
