@@ -49,55 +49,52 @@ export const register = (username: string, password: string) => (dispatch: any) 
     }
   );
 };
-// export const login = (username: string, password: string) => (dispatch: any) => {
-//     return AuthService.login(username, password).then(
-//       (data) => {
-//         dispatch({
-//           type: LOGIN_SUCCESS,
-//           payload: { user: data },
-//         });
-//         return Promise.resolve();
-//     },
-//     (error) => {
-//       const message =
-//         (error.response &&
-//           error.response.data &&
-//           error.response.data.message) ||
-//         error.message ||
-//         error.toString();
+export const login = (username: string, password: string) => (dispatch: any) => {
+    return AuthService.login(username, password).then(
+      (data) => {
+        dispatch({
+          type: LOGIN_SUCCESS,
+          payload: { user: data },
+        });
+        return Promise.resolve();
+    },
+    (error) => {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
 
-//       dispatch({
-//         type: LOGIN_FAIL,
-//       });
+      dispatch({
+        type: LOGIN_FAIL,
+      });
 
-//       dispatch({
-//         type: SET_MESSAGE,
-//         payload: message,
-//       });
+      dispatch({
+        type: SET_MESSAGE,
+        payload: message,
+      });
 
-//       return Promise.reject();
-//     }
-//   );
-//};
-export function login(username: string, password: string) {
-  return function(dispatch:any, success:any) {
-      axios.post(`${API_URL}/login`)
-          .then(response => {
-             dispatch({
-                 type: LOGIN_SUCCESS,
-                 payload: response.data
-             })
-             const { token } = response.data;
-             localStorage.setItem('token', token);
-             success();
-             console.log(response.data);
-          })
-          .catch(err => {
-              if(err) { console.log(err) }
-          })
-          
-  }
-}
+      return Promise.reject();
+    }
+  );
+};
+// export function login(username: string, password: string) {
+//   return function(dispatch:any) {
+//       axios.post(`${API_URL}/login`)
+//           .then(response => {
+//              dispatch({
+//                  type: LOGIN_SUCCESS,
+//                  payload: response.data
+//              })
+//              const { token } = response.data;
+//              localStorage.setItem('token', token);
+//           })
+//           .catch(err => {
+//               if(err) { console.log(err) }
+//           })
+//   }
+// }
   export const logout = () => (dispatch: any) => {
     AuthService.logout();
   
