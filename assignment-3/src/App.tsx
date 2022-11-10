@@ -2,11 +2,12 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 
 import { Link, Route, Routes, useLocation } from "react-router-dom";
-import React, { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import Game from "./components/Game";
 import Home from "./components/Home";
+import Leaderboard from "./components/Leaderboard";
 import Login from "./components/Login";
 import Profile from "./components/Profile";
 import SignUp from "./components/SignUp";
@@ -14,9 +15,6 @@ import { clearMessage } from "./actions/message";
 import { logout } from "./actions/auth";
 
 const App = () => {
-  // const [showModeratorBoard, setShowModeratorBoard] = useState(false);
-  // const [showAdminBoard, setShowAdminBoard] = useState(false);
-
   const { isLoggedIn } = useSelector((state: any) => state.auth);
   const dispatch = useDispatch();
 
@@ -33,16 +31,6 @@ const App = () => {
     dispatch((logout() as any));
   }, [dispatch]);
 
-  // useEffect(() => {
-  //   if (currentUser) {
-  //     setShowModeratorBoard(currentUser.roles.includes("ROLE_MODERATOR"));
-  //     setShowAdminBoard(currentUser.roles.includes("ROLE_ADMIN"));
-  //   } else {
-  //     setShowModeratorBoard(false);
-  //     setShowAdminBoard(false);
-  //   }
-  // }, [currentUser]);
-
   return (
     <div className="h-100">
       <nav className="navbar navbar-expand navbar-dark bg-dark">
@@ -57,6 +45,11 @@ const App = () => {
                 <Link to={"/game"} className="nav-link">
                   Play
                 </Link>
+            </li>
+            <li className="nav-item">
+              <Link to={"/leaderboard"} className="nav-link">
+                Leaderboard
+              </Link>
             </li>
             <li className="nav-item">
               <Link to={"/login"} className="nav-link" onClick={logOut}>
@@ -83,12 +76,12 @@ const App = () => {
 
       <div className="container mt-3">
         <Routes>
-          {/* <Route path="/" element={<Home />} /> */}
           <Route path="/home" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/game" element={<Game />} />
+          <Route path="/leaderboard" element={<Leaderboard />} />
         </Routes>
       </div>
 

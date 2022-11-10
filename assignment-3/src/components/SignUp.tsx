@@ -2,9 +2,12 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { register } from "../actions/auth";
 import { useState } from "react";
+import { Navigate } from "react-router-dom";
 
 const SignUp = () => {
     const dispatch = useDispatch();
+
+    const { isLoggedIn } = useSelector((state: any) => state.auth);
 
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
@@ -17,6 +20,10 @@ const SignUp = () => {
     const { message } = useSelector((state: any) => {
         return state.message
     });
+
+    if (isLoggedIn) {
+      return <Navigate to="/game" />;
+    }
 
     const onChangeUsername = (e: any) => {
         validateUsername(e);

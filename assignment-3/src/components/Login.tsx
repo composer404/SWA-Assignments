@@ -74,7 +74,7 @@ const handleLogin = () => {
 
 
   if (isLoggedIn) {
-    return <Navigate to="/profile" />;
+    return <Navigate to="/game" />;
   }
 
   return (

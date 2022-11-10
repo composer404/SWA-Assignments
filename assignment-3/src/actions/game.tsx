@@ -1,35 +1,11 @@
-import { ADD_SCORE, BOARD_CREATED, CLEAR_CURRENT, CLEAR_SELECTION, FIRST_ITEM_SELECTED, SECOND_ITEM_SELECTED } from './types'
-import { canMove, clearCurrent, create, createGame, getGame, initalScan, move, updateGame } from '../services/game.service'
+import { ADD_SCORE, BOARD_CREATED, CLEAR_CURRENT, CLEAR_MESSAGE, CLEAR_SELECTION, FINISH_GAME, FIRST_ITEM_SELECTED, SECOND_ITEM_SELECTED, SET_GAMES, SET_MESSAGE } from './types'
+import { canMove, clearCurrent, create, createGame, getGame, getGames, initalScan, move, updateGame } from '../services/game.service'
 
 import { RandomColorGenerator } from '../utils/cyclic-generator';
 
-export const createBoard = (userId: number, gameId: any, clear?: boolean) => (dispatch: any) => {
+export const createBoard = (userId: number, gameId: any) => (dispatch: any) => {
     const generator = new RandomColorGenerator();
 
-    if (clear) {
-        clearCurrent();
-        dispatch({
-            type: CLEAR_CURRENT,
-        })
-        gameId = undefined;
-    }
-    // try to load game
-
-    if (gameId) {
-        getGame(gameId).then((data) => {
-            dispatch({
-                type: BOARD_CREATED,
-                payload: {
-                    board: data.board,
-                    generator,
-                    firstItem: data.firstSelectedItem,
-                    id: data.id,
-                    score: data.score,
-                }
-            })
-        })
-        return;
-    }
     // Clears all matches before save in state
     const initBoard = create(generator, 4, 4);
     const { board } = initalScan(generator, initBoard);
@@ -49,7 +25,65 @@ export const createBoard = (userId: number, gameId: any, clear?: boolean) => (di
                 id: data.id
             }
         })
+
+        dispatch({
+            type: CLEAR_MESSAGE,
+        })
+    }).catch((err) => {
+        dispatch({
+            type: SET_MESSAGE,
+            payload: err.message,
+        })
     });
+}
+
+export const getAllGames = () => (dispatch: any) => {
+    getGames().then((result) => {
+        dispatch({
+            type: SET_GAMES,
+            payload: {
+                games: result.data,
+            }
+        })
+    }).catch((err) => {
+        dispatch({
+            type: SET_MESSAGE,
+            payload: err,
+        })
+    });
+}
+
+export const loadSaveGame = (gameId: number) => (dispatch: any) => {
+    getGame(gameId).then((game) => {
+        const generator = new RandomColorGenerator();
+        dispatch({
+            type: BOARD_CREATED,
+            payload: {
+                board: game.board,
+                generator,
+                score: game.score,
+                id: gameId,
+                currentMove: game.currentMove,
+                firstItem: game.firstSelectedItem,
+                completed: false, 
+            }
+        })
+    }).catch((err) => {
+        dispatch({
+            type: SET_MESSAGE,
+            payload: err.message,
+        })
+    });
+}
+
+export const finishGame = (gameId: number) => (dispach: any) => {
+    updateGame(gameId, {
+        completed: true,
+    });
+
+    dispach({
+        type: FINISH_GAME,
+    })
 }
 
 export const clearCurrentGame = (gameId: number) => (dispach: any) => {
@@ -57,10 +91,6 @@ export const clearCurrentGame = (gameId: number) => (dispach: any) => {
     dispach({
         type: CLEAR_CURRENT,
     })
-    // updateGame(gameId, {
-    //     completed: true,
-    // });
-
 }
 
 export const selectFirstItem = (item: any, gameId: number) => (dispach: any) => {
@@ -85,7 +115,7 @@ export const clearSelection = (gameId: number) => (dispatch: any) => {
     });
 }
 
-export const selectSecondItem = (board: any, generator: any, firstItem: any, secondItem: any, gameId: number, points: number) => (dispach: any) => {
+export const selectSecondItem = (board: any, generator: any, firstItem: any, secondItem: any, gameId: number, points: number, currentMove: number) => (dispach: any) => {
     // Check move possiblity before save in sate
     if (!canMove(board, firstItem.position, secondItem.position)) {
         return;
@@ -106,6 +136,7 @@ export const selectSecondItem = (board: any, generator: any, firstItem: any, sec
         score: points + score,
         board: result.board,
         firstSelectedItem: null,
+        currentMove: currentMove + 1,
     });
 
 

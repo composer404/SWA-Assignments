@@ -13,3 +13,5 @@ export const SECOND_ITEM_SELECTED = "SECOND_ITEM_SELECTED";
 export const CLEAR_SELECTION = "CLEAR_SELECTION";
 export const ADD_SCORE = "ADD_SCORE";
 export const CLEAR_CURRENT = "CLEAR_CURRENT";
+export const SET_GAMES = "SET_GAMES";
+export const FINISH_GAME = "FINISH_GAME";

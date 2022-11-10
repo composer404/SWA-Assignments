@@ -1,33 +1,55 @@
-import { clearCurrentGame, clearSelection, createBoard, selectFirstItem, selectSecondItem } from '../actions/game'
+import { clearCurrentGame, clearSelection, createBoard, finishGame, loadSaveGame, selectFirstItem, selectSecondItem } from '../actions/game'
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 
 import { Navigate } from 'react-router-dom';
+import { useEffect } from 'react'
 
 const Game = () => {
     const dispatch = useDispatch();
 
-    const { board, firstItem, generator, points, gameId } = useSelector((state: any) => { return state.game}, shallowEqual);
+    const { board, firstItem, generator, points, gameId, currentMove, maxMoves, completed } = useSelector((state: any) => { return state.game}, shallowEqual);
     const { isLoggedIn, user } = useSelector((state: any) => state.auth);
+    const { message } = useSelector((state: any) => state.message);
+    
+    useEffect(() => {
+        if (currentMove >= maxMoves) {
+            dispatch((finishGame(gameId)) as any);
+        }
+    })
+
+    useEffect(() => {
+        if (gameId && !board) {
+            dispatch((loadSaveGame(gameId)) as any);
+        }
+    }, [])
 
     if (!isLoggedIn) {
       return <Navigate to="/login" />;
     }
 
-    const handleCreateBoard = (clearCurrent: boolean) => {
-        dispatch((createBoard(user.userId, gameId, clearCurrent)) as any)
+    const handleCreateBoard = () => {
+        dispatch((createBoard(user.userId, gameId)) as any)
     };
 
     const handleClearSelection = () => {
         dispatch((clearSelection(gameId)) as any)
     }
 
+    const handleClearBoard = () => {
+        dispatch(clearCurrentGame(gameId) as any)
+    }
+
     const handleSelecteItem = (item: any) => {
+        if(completed) {
+            return;
+        }
+
         if (!firstItem) {
             dispatch((selectFirstItem(item, gameId)) as any)
             return;
         }
 
-        dispatch((selectSecondItem(board, generator, firstItem, item, gameId, points)) as any)
+        dispatch((selectSecondItem(board, generator, firstItem, item, gameId, points, currentMove)) as any)
     }
 
     const isSelectedElement = (element: any) => {
@@ -35,7 +57,6 @@ const Game = () => {
             return true;
         }
     }
-
     const renderRow = (elements: any[]) => {
         const rowToDisaply = [];
 
@@ -75,18 +96,35 @@ const Game = () => {
 
     return (
         <div>
-            {gameId && (
-                 <button className='btn btn-primary m-2' onClick={() => handleCreateBoard(false)}>Continue</button>
+            {!board && (
+            <div className='w-100 text-center mt-4 pt-4'>
+                <button className='btn btn-primary m-2' onClick={() => handleCreateBoard()}>Generate board</button>
+            </div>
             )}
-            <button className='btn btn-primary m-2' onClick={() => handleCreateBoard(true)}>Generate board</button>
-            <button className='btn btn-primary m-2' onClick={handleClearSelection}>Clear selection</button>
-            <div>Points {points}</div>
-            <table>
-                <tbody>
-                    {renderBoard()}
-                </tbody>
-            </table>
-        </div>
+            <div className='title mt-3'>Points {points}</div>
+            <div className='mt-3 w-100'>
+                    <table className='mx-auto position-relative'>
+                        <tbody>
+                            {renderBoard()}
+                        </tbody>
+
+                    {completed && (
+                        <div className='overlay'>
+                            <div>GAME FINISED. YOUR SCORE: {points}</div>
+                            <div>
+                            <button onClick={() => {handleClearBoard(); handleCreateBoard()}} className='w-100 mt-2 text-center mx-auto btn btn-primary'>Again</button>    
+                            </div>
+                        </div>
+                    )}
+                    </table>
+            </div>
+            <div className='w-100 text-center'>
+            {firstItem && (<button className='btn btn-primary m-2' onClick={handleClearSelection}>Clear selection</button>)}
+            </div>
+            {message && (<div>
+                {message}
+            </div>)}
+            </div>
     );
 }
 

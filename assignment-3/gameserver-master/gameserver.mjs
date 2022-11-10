@@ -53,6 +53,7 @@ const createDb = low => {
       score: 0, 
       completed: false, 
       board: undefined,
+      currentMove: 0,
       firstSelectedItem: undefined,
     }
     data.games.push(game)
