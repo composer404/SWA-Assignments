@@ -1,4 +1,5 @@
 import axios from "axios";
+import {getAuthHeader} from "../utils/auth-header";
 
 const API_URL = "http://localhost:9090/";
 
@@ -23,7 +24,16 @@ const login = async (username: string, password: string) => {
       });
   };
 
-  
+export async function getUser(id: number) {
+  return axios.get(API_URL + `users/${id}`, {
+    params: {
+      ...getAuthHeader()
+    }
+  }).then((response) => {
+    return response.data;
+  })
+}
+
   const logout = () => {
     localStorage.removeItem("user");
   };
@@ -31,5 +41,6 @@ const login = async (username: string, password: string) => {
   export default {
     register,
     login,
+    getUser,
     logout,
   };
