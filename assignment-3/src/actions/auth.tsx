@@ -1,4 +1,6 @@
 import {
+    ACCOUNT_UPDATE_FAIL,
+    ACCOUNT_UPDATE_SUCCESS,
     LOGIN_FAIL,
     LOGIN_SUCCESS,
     LOGOUT,
@@ -8,7 +10,6 @@ import {
 } from "./types";
 
 import AuthService from "../services/auth.service";
-import axios from 'axios';
 
 //import API_URL from '../services/auth.service';
 
@@ -79,6 +80,41 @@ export const login = (username: string, password: string) => (dispatch: any) => 
     }
   );
 };
+
+export const updateUserProfile = (accountId: number) => (dispatch: any) => {
+    return AuthService.getUser(accountId).then(
+        (response) => {
+            dispatch({
+                type: ACCOUNT_UPDATE_SUCCESS,
+            });
+
+            dispatch({
+                type: SET_MESSAGE,
+                payload: response.data.message || `Account updated successfully`,
+            });
+
+            return Promise.resolve();
+        },
+        (error) => {
+            const message =
+                (error.response &&
+                    error.response.data &&
+                    error.response.data.message) ||
+                error.message ||
+                error.toString();
+
+            dispatch({
+                type: ACCOUNT_UPDATE_FAIL,
+            });
+
+            dispatch({
+                type: SET_MESSAGE,
+                payload: message,
+            });
+            return Promise.reject();
+        }
+    );
+}
 // export function login(username: string, password: string) {
 //   return function(dispatch:any) {
 //       axios.post(`${API_URL}/login`)
