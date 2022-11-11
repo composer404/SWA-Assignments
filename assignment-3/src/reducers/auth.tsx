@@ -1,13 +1,12 @@
 /* eslint-disable import/no-anonymous-default-export */
 
 import {
-  ACCOUNT_UPDATE_FAIL,
-  ACCOUNT_UPDATE_SUCCESS,
   LOGIN_FAIL,
   LOGIN_SUCCESS,
   LOGOUT,
   REGISTER_FAIL,
   REGISTER_SUCCESS,
+  SET_USER,
 } from "../actions/types";
 
 const user = JSON.parse(localStorage.getItem("user") as string);
@@ -48,16 +47,16 @@ const user = JSON.parse(localStorage.getItem("user") as string);
           isLoggedIn: false,
           user: null,
         };
-      case ACCOUNT_UPDATE_SUCCESS:
+      case SET_USER: {
         return {
           ...state,
-          isLoggedIn: true,
-        };
-      case ACCOUNT_UPDATE_FAIL:
-        return {
-          ...state,
-          isLoggedIn: true,
-        };
+          user: {
+            ...state.user,
+            username: payload.username,
+            password: payload.password,
+          }
+        }
+      }
       default:
         return state;
     }

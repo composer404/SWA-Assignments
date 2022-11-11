@@ -1,117 +1,126 @@
-import {Navigate, useNavigate} from 'react-router-dom';
-import React, {useEffect, useState} from "react";
+import {loadUserData, updateUserProfile} from "../actions/auth";
 import {useDispatch, useSelector} from "react-redux";
-import {updateUserProfile} from "../actions/auth";
+import {useEffect, useState} from "react";
+
+import { MESSAGE_SUCCESS } from "../actions/types";
+import { Navigate } from "react-router-dom";
+import { clearMessage } from "../actions/message";
 
 const Profile = () => {
-
-  let navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { isUpdated } = useSelector((state: any) => state.auth);
-  const { message } = useSelector((state: any) => state.message);
+  const { message, type } = useSelector((state: any) => state.message);
+  const { user, isLoggedIn } = useSelector((state: any) => state.auth);
 
   const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-
-  const [invalidPassword, setInvalidPassword] = useState(true);
-  const [invalidUsername, setInvalidUsername] = useState(true);
-
-  const [successful] = useState(false);
+  const [oldPassword, setOldPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [invalidPassword, setInvalidPassword] = useState(false);
 
   useEffect(() => {
-    dispatch(updateUserProfile(isUpdated) as any);
-  });
+    dispatch((loadUserData(user.userId)) as any)
+  }, [])
 
-  const onChangeUsername = (e: any) => {
-    validateUsername(e);
-    const username = e.target.value;
-    setUsername(username);
-  };
+  useEffect(() => {
+    setUsername(user.username);
+  }, [user])
 
-  const onChangePassword = (e: any) => {
-    validatePassword(e)
-    const password = e.target.value;
-    setPassword(password);
-  };
-
-  const validateUsername = (e: any) => {
-    if(e.target.value.length < 3 || e.target.value.length > 12) {
-      setInvalidUsername(true);
-      return;
-    }
-    setInvalidUsername(false);
+  if (!isLoggedIn) {
+    return <Navigate to="/login" />;
   }
 
-  const validatePassword = (e: any) => {
-    if(e.target.value.length < 3 || e.target.value.length > 12) {
+  const onChangeNewPassword = (e: any) => {
+    setInvalidPassword(false);
+    const password = e.target.value;
+    setNewPassword(password || ``);
+  };
+
+  const onChangeOldPassword = (e: any) => {
+    setInvalidPassword(false);
+    const password = e.target.value;
+    setOldPassword(password || ``);
+  };
+
+  const handleSave = () => {
+    setInvalidPassword(false);
+    dispatch((clearMessage()));
+
+    // More save to have this kind of validation on serverside instead of having user password in state
+    if (oldPassword !== user.password) {
       setInvalidPassword(true);
       return;
     }
-    setInvalidPassword(false);
-  }
 
-  if (isUpdated) {
-    return <Navigate to="/game" />;
+    dispatch(updateUserProfile(user.userId, {
+      username,
+      password: newPassword,
+    }) as any);
   }
 
   return (
       <div className="col-md-4 mx-auto h-100">
         <div className="card card-container p-4 my-auto">
-          <img
-              src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
-              alt="profile-img"
-              className="profile-img-card"
+        <img
+            src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
+            alt="profile-img"
+            width="100"
+            height="100"
+            className="profile-img-card rounded mx-auto mb-4 mt-4"
           />
           {(
               <div>
                 <div className="form-group mt-2">
                   <label htmlFor="username">Username</label>
                   <input
+                      disabled
                       type="text"
                       className="form-control"
                       name="username"
-                      value={username}
-                      onChange={onChangeUsername}
+                      value={username || ``}
                   />
                 </div>
 
-                {invalidUsername}
-
                 <div className="form-group mt-2">
-                  <label htmlFor="password">Password</label>
+                  <label htmlFor="password">Old password</label>
                   <input
                       type="password"
                       className="form-control"
                       name="password"
-                      value={password}
-                      onChange={onChangePassword}
+                      value={oldPassword || ``}
+                      onChange={onChangeOldPassword}
                   />
                 </div>
 
-                {invalidPassword}
+                <div className="form-group mt-2">
+                  <label htmlFor="password">New password</label>
+                  <input
+                      type="password"
+                      className="form-control"
+                      name="password"
+                      value={newPassword || ``}
+                      onChange={onChangeNewPassword}
+                  />
+                </div>
 
                 <div className="form-group mt-4">
-                  <button disabled={invalidPassword || invalidUsername} className="btn btn-primary btn-block w-100">Save</button>
+                  <button onClick={handleSave} className="btn btn-primary btn-block w-100">Save</button>
                 </div>
+
+                {invalidPassword && (
+                  <div className="alert alert-danger mt-4" role="alert">Old password is incorrect!</div>
+                )}
               </div>
           )}
 
-          {message && successful && (
-              <Navigate to="/" />
-          )}
-
-          {message && !successful && (
+          {message && (
               <div className="form-group mt-4">
-                <div className="alert alert-danger" role="alert">
-                  <div>Incorrect username or password.</div>
+                <div className={type === MESSAGE_SUCCESS ? 'alert alert-success' : 'alert alert-danger'} role="alert">
                   <div>{message}</div>
                 </div>
               </div>
           )}
         </div>
       </div>
-
   );
 };
 

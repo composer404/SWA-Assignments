@@ -1,23 +1,20 @@
 import {
-    ACCOUNT_UPDATE_FAIL,
-    ACCOUNT_UPDATE_SUCCESS,
-    LOGIN_FAIL,
-    LOGIN_SUCCESS,
-    LOGOUT,
-    REGISTER_FAIL,
-    REGISTER_SUCCESS,
-    SET_MESSAGE,
+  CLEAR_CURRENT,
+  LOGIN_FAIL,
+  LOGIN_SUCCESS,
+  LOGOUT,
+  MESSAGE_ERROR,
+  MESSAGE_SUCCESS,
+  REGISTER_FAIL,
+  REGISTER_SUCCESS,
+  SET_MESSAGE,
+  SET_USER,
 } from "./types";
 
 import AuthService from "../services/auth.service";
 
-//import API_URL from '../services/auth.service';
-
-
-const API_URL = "http://localhost:9090"
-
 export const register = (username: string, password: string) => (dispatch: any) => {
-    return AuthService.register(username, password).then(
+    AuthService.register(username, password).then(
       (response) => {
         dispatch({
             type: REGISTER_SUCCESS,
@@ -25,7 +22,10 @@ export const register = (username: string, password: string) => (dispatch: any) 
   
         dispatch({
           type: SET_MESSAGE,
-          payload: response.data.message || `Account created successfully`,
+          payload: {
+           message: `Account created successfully`,
+           type: MESSAGE_SUCCESS,
+          },
         });
   
         return Promise.resolve();
@@ -44,7 +44,10 @@ export const register = (username: string, password: string) => (dispatch: any) 
 
       dispatch({
         type: SET_MESSAGE,
-        payload: message,
+        payload: {
+          message,
+          type: MESSAGE_ERROR,
+        },
       });
       return Promise.reject();
     }
@@ -73,7 +76,10 @@ export const login = (username: string, password: string) => (dispatch: any) => 
 
       dispatch({
         type: SET_MESSAGE,
-        payload: message,
+        payload: {
+          message,
+          type: MESSAGE_ERROR,
+        },
       });
 
       return Promise.reject();
@@ -81,16 +87,49 @@ export const login = (username: string, password: string) => (dispatch: any) => 
   );
 };
 
-export const updateUserProfile = (accountId: number) => (dispatch: any) => {
-    return AuthService.getUser(accountId).then(
+export const loadUserData = (userId: number) => (dispatch: any)  => {
+  return AuthService.getUser(userId).then(
+    (response) => {
+        dispatch({
+            type: SET_USER,
+            payload: {
+              username: response.username,
+              password: response.password,
+            }
+        });
+
+        return Promise.resolve();
+    },
+    (error) => {
+        const message =
+            (error.response &&
+                error.response.data &&
+                error.response.data.message) ||
+            error.message ||
+            error.toString();
+        dispatch({
+            type: SET_MESSAGE,
+            payload: {
+              message,
+              type: MESSAGE_ERROR,
+            },
+        });
+        return Promise.reject();
+    }
+);
+
+}
+
+export const updateUserProfile = (accountId: number, body: any) => (dispatch: any) => {
+    return AuthService.updateUser(accountId, body).then(
         (response) => {
-            dispatch({
-                type: ACCOUNT_UPDATE_SUCCESS,
-            });
 
             dispatch({
                 type: SET_MESSAGE,
-                payload: response.data.message || `Account updated successfully`,
+                payload: {
+                  message: `Account updated successfully`,
+                  type: MESSAGE_SUCCESS,
+                },
             });
 
             return Promise.resolve();
@@ -104,36 +143,24 @@ export const updateUserProfile = (accountId: number) => (dispatch: any) => {
                 error.toString();
 
             dispatch({
-                type: ACCOUNT_UPDATE_FAIL,
-            });
-
-            dispatch({
                 type: SET_MESSAGE,
-                payload: message,
+                payload: {
+                  message,
+                  type: MESSAGE_ERROR,
+                },
             });
             return Promise.reject();
         }
     );
 }
-// export function login(username: string, password: string) {
-//   return function(dispatch:any) {
-//       axios.post(`${API_URL}/login`)
-//           .then(response => {
-//              dispatch({
-//                  type: LOGIN_SUCCESS,
-//                  payload: response.data
-//              })
-//              const { token } = response.data;
-//              localStorage.setItem('token', token);
-//           })
-//           .catch(err => {
-//               if(err) { console.log(err) }
-//           })
-//   }
-// }
+
   export const logout = () => (dispatch: any) => {
     AuthService.logout();
   
+    dispatch({
+      type: CLEAR_CURRENT,
+    });
+
     dispatch({
       type: LOGOUT,
     });

@@ -1,38 +1,27 @@
-//import {CheckButton, Form, Input} from "react-validation";
-
-import { Navigate, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from "react-redux";
 
+import { MESSAGE_SUCCESS } from '../actions/types';
+import { Navigate } from 'react-router-dom';
+import { clearMessage } from "../actions/message";
 import { login } from "../actions/auth";
-import  { useState } from "react";
-
-const required = (value: string) => {
-  if (!value) {
-    return (
-      <div className="alert alert-danger" role="alert">
-        This field is required!
-      </div>
-    );
-  }
-};
+import { useState } from "react";
 
 const Login = () => {
-
-  let navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   const { isLoggedIn } = useSelector((state: any) => state.auth);
-  const { message } = useSelector((state: any) => state.message);
+  const { message, type } = useSelector((state: any) => state.message);
   
   const [invalidPassword, setInvalidPassword] = useState(true);
   const [invalidUsername, setInvalidUsername] = useState(true);
 
-  const [successful, setSuccessful] = useState(false);
-
-  const dispatch = useDispatch();
   
+  if (isLoggedIn) {
+    return <Navigate to="/game" />;
+  }
 
   const onChangeUsername = (e: any) => {
     validateUsername(e);
@@ -62,29 +51,21 @@ const validatePassword = (e: any) => {
   setInvalidPassword(false);
 }
 const handleLogin = () => {
+  dispatch((clearMessage()));
   dispatch((login(username, password)) as any)
-  .then(() => {
-    navigate("/game");
-      setSuccessful(true);
-  })
-  .catch(() => {
-      setSuccessful(false);
-  });
 };
 
-
-  if (isLoggedIn) {
-    return <Navigate to="/game" />;
-  }
 
   return (
     <div className="col-md-4 mx-auto h-100">
       <div className="card card-container p-4 my-auto">
-        <img
-          src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
-          alt="profile-img"
-          className="profile-img-card"
-        />
+      <img
+            src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
+            alt="profile-img"
+            width="100"
+            height="100"
+            className="profile-img-card rounded mx-auto mb-4 mt-4"
+          />
         {(
               <div>
                 <div className="form-group mt-2">
@@ -98,7 +79,9 @@ const handleLogin = () => {
                   />
                 </div>
 
-                {invalidUsername}
+                {invalidUsername && username.length > 0 && (
+                  <div className="text-danger">Username should be between 3 - 12</div>
+                )}
   
                 <div className="form-group mt-2">
                   <label htmlFor="password">Password</label>
@@ -111,22 +94,19 @@ const handleLogin = () => {
                   />
                 </div>
 
-                {invalidPassword}
+                {invalidPassword && username.length > 0 && (
+                  <div className="text-danger">Password should be between 3 - 12</div>
+                )}
   
                 <div className="form-group mt-4">
                   <button disabled={invalidPassword || invalidUsername} onClick={handleLogin} className="btn btn-primary btn-block w-100">Login</button>
                 </div>
               </div>
             )}
-  
-            {message && successful && (
-             <Navigate to="/" />
-            )}
 
-            {message && !successful && (
+            {message && (
               <div className="form-group mt-4">
-                <div className="alert alert-danger" role="alert">
-                  <div>Incorrect username or password.</div>
+                <div className={type === MESSAGE_SUCCESS ? 'alert alert-success' : 'alert alert-danger'} role="alert">
                   <div>{message}</div>
                 </div>
               </div>
@@ -135,7 +115,5 @@ const handleLogin = () => {
       </div>
     );
 };
-
-
 export default Login;
 

@@ -1,4 +1,4 @@
-import { ADD_SCORE, BOARD_CREATED, CLEAR_CURRENT, CLEAR_MESSAGE, CLEAR_SELECTION, FINISH_GAME, FIRST_ITEM_SELECTED, SECOND_ITEM_SELECTED, SET_GAMES, SET_MESSAGE } from './types'
+import { ADD_SCORE, BOARD_CREATED, CLEAR_CURRENT, CLEAR_MESSAGE, CLEAR_SELECTION, FINISH_GAME, FIRST_ITEM_SELECTED, MESSAGE_ERROR, SECOND_ITEM_SELECTED, SET_GAMES, SET_MESSAGE } from './types'
 import { canMove, clearCurrent, create, createGame, getGame, getGames, initalScan, move, updateGame } from '../services/game.service'
 
 import { RandomColorGenerator } from '../utils/cyclic-generator';
@@ -10,7 +10,6 @@ export const createBoard = (userId: number, gameId: any) => (dispatch: any) => {
     const initBoard = create(generator, 4, 4);
     const { board } = initalScan(generator, initBoard);
 
-    //! Error handling
     createGame(userId).then((data) => {
         updateGame(data.id, {
             board,
@@ -32,7 +31,10 @@ export const createBoard = (userId: number, gameId: any) => (dispatch: any) => {
     }).catch((err) => {
         dispatch({
             type: SET_MESSAGE,
-            payload: err.message,
+            payload: {
+                message: err.message,
+                type: MESSAGE_ERROR,
+            },
         })
     });
 }
@@ -48,7 +50,10 @@ export const getAllGames = () => (dispatch: any) => {
     }).catch((err) => {
         dispatch({
             type: SET_MESSAGE,
-            payload: err,
+            payload: {
+                message: err.message,
+                type: MESSAGE_ERROR,
+            },
         })
     });
 }
@@ -71,7 +76,10 @@ export const loadSaveGame = (gameId: number) => (dispatch: any) => {
     }).catch((err) => {
         dispatch({
             type: SET_MESSAGE,
-            payload: err.message,
+            payload: {
+                message: err.message,
+                type: MESSAGE_ERROR,
+            },
         })
     });
 }
@@ -116,7 +124,7 @@ export const clearSelection = (gameId: number) => (dispatch: any) => {
 }
 
 export const selectSecondItem = (board: any, generator: any, firstItem: any, secondItem: any, gameId: number, points: number, currentMove: number) => (dispach: any) => {
-    // Check move possiblity before save in sate
+    // Check move possiblity before save in state
     if (!canMove(board, firstItem.position, secondItem.position)) {
         return;
     }
@@ -126,7 +134,6 @@ export const selectSecondItem = (board: any, generator: any, firstItem: any, sec
         return effect.kind === `Match`;
     });
 
-    //Dispatching points for each match
     let score = 0;
     matches.forEach(() => {
         return score += 10;

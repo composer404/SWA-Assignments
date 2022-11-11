@@ -1,14 +1,19 @@
+/* ---------------------------------- AUTH ---------------------------------- */
 export const REGISTER_SUCCESS = "REGISTER_SUCCESS";
 export const REGISTER_FAIL = "REGISTER_FAIL";
 export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
 export const LOGIN_FAIL = "LOGIN_FAIL";
 export const LOGOUT = "LOGOUT";
-export const ACCOUNT_UPDATE_SUCCESS = "ACCOUNT_UPDATE_SUCCESS";
-export const ACCOUNT_UPDATE_FAIL = "LOGIN_FAIL";
+export const SET_USER = "SET_USER";
+
+/* --------------------------------- MESSAGE -------------------------------- */
 
 export const SET_MESSAGE = "SET_MESSAGE";
 export const CLEAR_MESSAGE = "CLEAR_MESSAGE";
+export const MESSAGE_SUCCESS = "MESSAGE_SUCCESS";
+export const MESSAGE_ERROR = "MESSAGE_ERROR";
 
+/* ---------------------------------- GAME ---------------------------------- */
 export const BOARD_CREATED = "BOARD_CREATED";
 export const FIRST_ITEM_SELECTED = "FIRST_ITEM_SELECTED";
 export const SECOND_ITEM_SELECTED = "SECOND_ITEM_SELECTED";

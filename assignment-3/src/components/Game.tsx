@@ -15,7 +15,7 @@ const Game = () => {
         if (currentMove >= maxMoves) {
             dispatch((finishGame(gameId)) as any);
         }
-    })
+    }, [currentMove, board])
 
     useEffect(() => {
         if (gameId && !board) {
@@ -101,7 +101,8 @@ const Game = () => {
                 <button className='btn btn-primary m-2' onClick={() => handleCreateBoard()}>Generate board</button>
             </div>
             )}
-            <div className='title mt-3'>Points {points}</div>
+            {board && (<div className='title mt-3'>Points {points}</div>)}
+            {board && (<div className='title mt-3'>Moves left: {maxMoves - currentMove}</div>)}
             <div className='mt-3 w-100'>
                     <table className='mx-auto position-relative'>
                         <tbody>
@@ -110,7 +111,7 @@ const Game = () => {
 
                     {completed && (
                         <div className='overlay'>
-                            <div>GAME FINISED. YOUR SCORE: {points}</div>
+                            <div>GAME FINISHED. YOUR SCORE: {points}</div>
                             <div>
                             <button onClick={() => {handleClearBoard(); handleCreateBoard()}} className='w-100 mt-2 text-center mx-auto btn btn-primary'>Again</button>    
                             </div>

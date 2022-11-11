@@ -7,7 +7,7 @@ const gameId = JSON.parse(localStorage.getItem("currentGameId") as string);
 const initialState = {
     points: 0,
     currentMove: 0,
-    maxMoves: 3,
+    maxMoves: 10,
     completed: false,
     gameId,
 };
@@ -63,6 +63,7 @@ export default function (state = initialState, action: any) {
                 firstItem: null,
                 points: 0,
                 currentMove: 0,
+                completed: false,
             }
         case ADD_SCORE:
             return {

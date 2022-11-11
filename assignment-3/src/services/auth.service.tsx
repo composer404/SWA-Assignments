@@ -24,6 +24,18 @@ const login = async (username: string, password: string) => {
       });
   };
 
+export async function updateUser(id: number, body: any) {
+  return axios.patch(API_URL + `users/${id}`, {
+    ...body,
+  }, {
+    params: {
+      ...getAuthHeader()
+    }
+  }).then((response: any) => {
+    return response.data;
+  });
+}
+
 export async function getUser(id: number) {
   return axios.get(API_URL + `users/${id}`, {
     params: {
@@ -36,6 +48,7 @@ export async function getUser(id: number) {
 
   const logout = () => {
     localStorage.removeItem("user");
+    localStorage.removeItem("currentGameId");
   };
   
   export default {
@@ -43,4 +56,5 @@ export async function getUser(id: number) {
     login,
     getUser,
     logout,
+    updateUser
   };

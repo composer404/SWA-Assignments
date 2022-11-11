@@ -1,25 +1,21 @@
 import { useDispatch, useSelector } from "react-redux";
 
+import { MESSAGE_SUCCESS } from "../actions/types";
+import { Navigate } from "react-router-dom";
 import { register } from "../actions/auth";
 import { useState } from "react";
-import { Navigate } from "react-router-dom";
 
 const SignUp = () => {
     const dispatch = useDispatch();
 
     const { isLoggedIn } = useSelector((state: any) => state.auth);
+    const { message, type } = useSelector((state: any) => state.message);
 
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
+    const [username, setUsername] = useState(``);
+    const [password, setPassword] = useState(``);
 
     const [invalidPassword, setInvalidPassword] = useState(true);
     const [invalidUsername, setInvalidUsername] = useState(true);
-
-    const [successful, setSuccessful] = useState(false);
-
-    const { message } = useSelector((state: any) => {
-        return state.message
-    });
 
     if (isLoggedIn) {
       return <Navigate to="/game" />;
@@ -55,16 +51,9 @@ const SignUp = () => {
       setInvalidPassword(false);
     }
 
-
-      const handleRegister = () => {
-        dispatch((register(username, password)) as any)
-        .then(() => {
-            setSuccessful(true);
-        })
-        .catch(() => {
-            setSuccessful(false);
-        });
-      };
+    const handleRegister = () => {
+      dispatch((register(username, password)) as any)
+    };
 
 
      return (
@@ -91,7 +80,7 @@ const SignUp = () => {
                   />
                 </div>
 
-                {invalidUsername && (
+                {invalidUsername && username.length > 0 && (
                   <div className="text-danger">Username should be between 3 - 12</div>
                 )}
   
@@ -106,7 +95,7 @@ const SignUp = () => {
                   />
                 </div>
 
-                {invalidPassword && (
+                {invalidPassword && password.length > 0 && (
                   <div className="text-danger">Password should be between 3 - 12</div>
                 )}
   
@@ -115,19 +104,10 @@ const SignUp = () => {
                 </div>
               </div>
             )}
-  
-            {message && successful && (
-              <div className="form-group mt-4">
-                <div className="alert alert-success" role="alert">
-                  Account created successfully!
-                </div>
-              </div>
-            )}
 
-            {message && !successful && (
+            {message && (
               <div className="form-group mt-4">
-                <div className="alert alert-danger" role="alert">
-                  <div>Cannot create account.</div>
+                <div className={type === MESSAGE_SUCCESS ? 'alert alert-success' : 'alert alert-danger'} role="alert">
                   <div>{message}</div>
                 </div>
               </div>
