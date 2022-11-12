@@ -1,5 +1,5 @@
 import axios from "axios";
-import { getAuthHeader } from "../utils/auth-header"
+import { getAuthHeader } from "../utils/auth-header";
 
 export type Generator<T> = { next: () => T };
 
@@ -49,44 +49,65 @@ export type MoveResult<T> = {
 
 const API_URL = "http://localhost:9090/";
 
-
 /* ---------------------------- API COMMUNICATION --------------------------- */
-
-export function getGames() {
-    return axios.get(API_URL + "games", {
-      params: {
-        ...getAuthHeader()
-      }
+export function login() {
+  return axios
+    .post(API_URL + "login", {
+      username: `admin`,
+      password: `secret`,
+    })
+    .then((res) => {
+      localStorage.setItem(`user`, JSON.stringify(res.data));
     });
-  }
-
-export async function createGame(userId: number) {
-  return axios.post(API_URL + "games", {
-      user: {
-        id: userId,
-      }
-  }, {
-    params: {
-      ...getAuthHeader()
-    }
-  }).then((response: any) => {
-    if(response.data.id)
-    {
-      localStorage.setItem(`currentGameId`, response.data.id);
-    }
-    return response.data;
-  })
 }
 
+export function getGames() {
+  return axios.get(API_URL + "games", {
+    params: {
+      ...getAuthHeader(),
+    },
+  });
+}
+
+export async function createGame(userId: number) {
+  return axios
+    .post(
+      API_URL + "games",
+      {
+        user: {
+          id: userId,
+        },
+      },
+      {
+        params: {
+          ...getAuthHeader(),
+        },
+      }
+    )
+    .then((response: any) => {
+      if (response.data.id) {
+        localStorage.setItem(`currentGameId`, response.data.id);
+      }
+      return response.data;
+    });
+}
 
 export function updateGame(id: number, body: any) {
-  axios.patch(API_URL + `games/${id}`, {
-    ...body
-  }, {
-    params: {
-      ...getAuthHeader()
+  axios.patch(
+    API_URL + `games/${id}`,
+    {
+      ...body,
+    },
+    {
+      params: {
+        ...getAuthHeader(),
+      },
     }
-  })
+  );
+}
+
+export function saveGameId(id: number) {
+  localStorage.setItem("currentGameId", id.toString());
 }
 
 export function clearCurrent() {
@@ -94,13 +115,15 @@ export function clearCurrent() {
 }
 
 export async function getGame(id: number) {
-  return axios.get(API_URL + `games/${id}`, {
-    params: {
-      ...getAuthHeader()
-    }
-  }).then((response) => {
-    return response.data;
-  })
+  return axios
+    .get(API_URL + `games/${id}`, {
+      params: {
+        ...getAuthHeader(),
+      },
+    })
+    .then((response) => {
+      return response.data;
+    });
 }
 
 /* ----------------------------- GIVEN FUNCTIONS ---------------------------- */
@@ -260,9 +283,9 @@ function refillBoard<T>(
         const result = findPieceOnPosition(board, {
           row: 0,
           col: foundElement.position.col,
-        })
+        });
 
-        if(result) {
+        if (result) {
           result.value = generator.next();
         }
       }
@@ -571,7 +594,7 @@ function swapPieces<T>(board: Board<T>, first: Position, second: Position) {
     return;
   }
 
-  const firstIndex = board.pieces.indexOf(firstPiece );
+  const firstIndex = board.pieces.indexOf(firstPiece);
   const secondIndex = board.pieces.indexOf(secondPiece);
 
   if (!(board.pieces as any).swapProperties) {
@@ -581,7 +604,9 @@ function swapPieces<T>(board: Board<T>, first: Position, second: Position) {
       propertyToSwap: string
     ) => {
       const firstPieceValue = (board.pieces as any)[firstIndex][propertyToSwap];
-      const secondPieceValue = (board.pieces as any)[secondIndex][propertyToSwap];
+      const secondPieceValue = (board.pieces as any)[secondIndex][
+        propertyToSwap
+      ];
       (board.pieces as any)[firstIndex][propertyToSwap] = secondPieceValue;
       (board.pieces as any)[secondIndex][propertyToSwap] = firstPieceValue;
     };

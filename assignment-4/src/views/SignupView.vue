@@ -7,28 +7,68 @@
         <div class="form-group mt-4">
           <div>Username</div>
           <input v-model="username" type="text" class="form-control mt-1">
+          <small class="text-danger" v-if="username.length && usernameInvalid">Username should be between 3 - 12 letters</small>
         </div>
         <div class="form-group mt-4">
           <div>Password</div>
           <input v-model="password" type="password" class="form-control mt-1">
+          <small class="text-danger" v-if="password.length && passwordInvalid">Password should be between 3 - 12 letters</small>
         </div>
-        <button type="submit" class="w-100 btn btn-primary mt-4 mb-3">Signup</button>
+        <button :disabled="usernameInvalid || passwordInvalid" type="submit" class="w-100 btn btn-primary mt-4 mb-3">Signup</button>
+      
+        <div v-if="error" class="alert alert-danger">
+        Error occured. Try again later.
+    </div>
+
+    <div v-if="success" class="alert alert-success">
+      Account created successfully!
+    </div>
       </form>
     </div>
   </div>
 </template>
 
 <script>
+  import { register } from '../services/auth.service';
+ 
   export default {
     data() {
       return {
         username: '',
         password: '',
+        error: undefined,
+        success: undefined,
+        
+        usernameInvalid: true,
+        passwordInvalid: true,
+      }
+    },
+    watch: {
+      username() {
+        if(this.username.length < 3 || this.username.length > 12) {
+            this.usernameInvalid = true;
+            return;
+          }
+          this.usernameInvalid = false;
+      },
+      password() {
+        if(this.password.length < 3 || this.password.length > 12) {
+            this.passwordInvalid = true;
+            return;
+          }
+          this.passwordInvalid = false;
       }
     },
     methods: {
       signup() {
-       console.log(this.username, this.password);
+        this.error = false;
+        this.success = false;
+
+        register(this.username, this.password).then(() => {
+          this.success = true;
+        }).catch(() => {
+          this.error = true;
+        })
       }
     }
   }
