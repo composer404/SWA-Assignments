@@ -18,7 +18,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
   export default {
     data() {
       return {
@@ -28,7 +28,7 @@
     },
     methods: {
       signup() {
-       console.log(this.username, this.password);
+       //console.log(this.username, this.password);
       }
     }
   }
