@@ -1,16 +1,18 @@
 import axios from "axios";
 import { getAuthHeader } from "../utils/auth-header";
 
+//import router from "@/router";
+
 const API_URL = "http://localhost:9090/";
 
-const register = (username: string, password: string) => {
+export async function register (username: string, password: string) {
   return axios.post(API_URL + "users", {
     username,
     password,
-  });
-};
+  })
+}
 
-const login = async (username: string, password: string) => {
+export async function login(username: string, password: string) {
   return axios
     .post(API_URL + "login", {
       username,
@@ -22,7 +24,7 @@ const login = async (username: string, password: string) => {
       }
       return response.data;
     });
-};
+}
 
 export async function updateUser(id: number, body: any) {
   return axios
@@ -54,10 +56,10 @@ export async function getUser(id: number) {
     });
 }
 
-const logout = () => {
+export async function logout () {
   localStorage.removeItem("user");
   localStorage.removeItem("currentGameId");
-};
+}
 
 export default {
   register,

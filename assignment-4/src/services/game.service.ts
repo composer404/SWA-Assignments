@@ -50,11 +50,11 @@ export type MoveResult<T> = {
 const API_URL = "http://localhost:9090/";
 
 /* ---------------------------- API COMMUNICATION --------------------------- */
-export function login() {
+export function login(username: string, password: string) {
   return axios
     .post(API_URL + "login", {
-      username: `admin`,
-      password: `secret`,
+      username,
+      password,
     })
     .then((res) => {
       localStorage.setItem(`user`, JSON.stringify(res.data));
