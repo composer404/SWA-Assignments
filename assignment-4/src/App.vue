@@ -1,10 +1,10 @@
 <template>
   <nav>
-    <div v-if="!isLoggedIn()">
+    <div v-if="!isLoggedIn">
       <router-link to="/login">Login</router-link>
     <router-link to="/signup">Signup</router-link>
   </div>
-  <div  v-if="isLoggedIn()">
+  <div  v-if="isLoggedIn">
     <router-link to="/profile">Profile</router-link> 
     <router-link to="/game">Game</router-link>
     <router-link to="/leaderboard" >Leaderboard</router-link>
@@ -14,30 +14,27 @@
   <router-view/>
 </template>
 <script >
-import {logout, LoggedIn} from './services/auth.service'
-import {getLoggedInSubject} from './services/auth.service'
+import {logout, authAction, checkAuthentication } from './services/auth.service'
 export default {
-
-    methods: {
-    handleLogout() {
-     logout();
-     this.$router.replace({path: "/login"})
+    data() {
+      return {
+        isLoggedIn: false,
+      }
     },
-    isLoggedIn()
-    {
-      getLoggedInSubject.subscribe((data) => {
-        LoggedIn();
-        subject.next()
-      })
+    methods: {
+      handleLogout() {
+        logout();
+        this.$router.replace({path: "/login"})
+      },
+    },
+    beforeMount() {
+      authAction.getAuthState().subscribe((state) => {
+          this.isLoggedIn = state;
+      });
 
-      // LoggedIn(): Observable<boolean>{
-      //   isLoginSubject.asObservable(),
-      // };
-     // return this.isLoginSubject.asObservable();
-    }
-  },
-
-}
+      checkAuthentication();
+    },
+  }
  
 </script>
 
