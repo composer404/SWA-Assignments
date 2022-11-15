@@ -28,7 +28,8 @@
 </template>
 
 <script>
-  import { create, initalScan, canMove, move, updateGame, createGame, login, saveGameId, getGame } from '@/services/game.service'
+  import { create, initalScan, canMove, move, updateGame, createGame, saveGameId, getGame } from '@/services/game.service'
+  //import {login} from '@/services/auth.service'
   import { RandomColorGenerator } from '@/utils/generator'
 
   export default {
@@ -119,7 +120,7 @@
       }
     },
     beforeMount() {
-      login();
+      //login();
       this.generator = new RandomColorGenerator();
       if (localStorage.getItem(`currentGameId`)) {
         getGame(localStorage.getItem(`currentGameId`)).then((game) => {

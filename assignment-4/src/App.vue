@@ -1,53 +1,56 @@
 <template>
   <nav>
-    <router-link to="/login" v-if="!currentUser" >Login</router-link>
-    <router-link to="/signup"  v-if="!currentUser" >Signup</router-link>
-    <router-link to="/profile" v-if="currentUser">Profile</router-link>
-    <router-link to="/game" v-if="currentUser">Game</router-link>
-    <router-link to="/leaderboard" v-if="currentUser">Leaderboard</router-link>
-    <button @click="logOut" type="submit">Logout</button>
+    <div v-if="!isLoggedIn()">
+      <router-link to="/login">Login</router-link>
+    <router-link to="/signup">Signup</router-link>
+  </div>
+  <div  v-if="isLoggedIn()">
+    <router-link to="/profile">Profile</router-link> 
+    <router-link to="/game">Game</router-link>
+    <router-link to="/leaderboard" >Leaderboard</router-link>
+    <button @click="handleLogout()"  type="submit">Logout</button>
+  </div>
   </nav>
   <router-view/>
 </template>
-<script>
-import {logout} from './services/auth.service'
+<script >
+import {logout, LoggedIn} from './services/auth.service'
+import {getLoggedInSubject} from './services/auth.service'
 export default {
-//   computed: {
-//     currentUser() {
-//       return this.$store.state.auth.user;
-//     },
-//     methods: {
-//     logOut() {
-//       this.$store.dispatch('auth/logout');
-//       this.$router.push('/login');
-//     }
-//   },
-// },
-// }
-  
-  computed: {
-      isLoggedIn() {
-        console.log(JSON.parse(localStorage.getItem("user")) === "true");
-
-        if (localStorage.getItem("user") === "true")  {
-          console.log("STORAGE LOGGED IN TRUE");
-        }
-        else  {
-          console.log("STORAGE LOGGED IN FALSE");
-        }
-
-        return localStorage.getItem("user") === "true";
-      }
+  data () {
+        return {
+            message: []
+        };
     },
+    methods: {
+    handleLogout() {
+     logout();
+     this.$router.replace({path: "/login"})
+    },
+    isLoggedIn()
+    {
+      getLoggedInSubject.subscribe((data) => {
+        LoggedIn();
+        subject.next()
+      })
 
-    methods:{
-      logout1(){
-      logout().then(() => {
-          this.$router.push({path: "/login"});
-        })
+      // LoggedIn(): Observable<boolean>{
+      //   isLoginSubject.asObservable(),
+      // };
+     // return this.isLoginSubject.asObservable();
     }
-  }
+  },
+  // created()
+  // {
+  //   this.subscription = getLoggedInSubject.subscribe(this.message =>{
+  //     if(message){
+  //       this.message.push(message),
+  //     },else {
+  //       message =[];
+  //   }),
+  // },
 }
+ 
 </script>
 
 

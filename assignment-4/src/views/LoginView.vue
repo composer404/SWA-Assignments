@@ -14,7 +14,7 @@
           <input v-model="password" type="password" class="form-control mt-1">
           <small class="text-danger" v-if="password.length && passwordInvalid">Password should be between 3 - 12 letters</small>
         </div>
-        <button :disabled="usernameInvalid || passwordInvalid" type="submit" class="w-100 btn btn-primary mt-4 mb-3" @click="login">Login</button>
+        <button :disabled="usernameInvalid || passwordInvalid" type="submit" class="w-100 btn btn-primary mt-4 mb-3">Login</button>
       
         <div v-if="error" class="alert alert-danger">
         Error occurred. Try again later.
@@ -69,7 +69,7 @@ import {login} from '../services/auth.service';
 
         login(this.username, this.password).then(() => {
            this.success = true;
-          this.$router.push({path: "/game"})
+          this.$router.replace({path: "/game"})
         }).catch(() => {
           this.error = true;
         })
