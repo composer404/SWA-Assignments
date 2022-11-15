@@ -17,11 +17,7 @@
 import {logout, LoggedIn} from './services/auth.service'
 import {getLoggedInSubject} from './services/auth.service'
 export default {
-  data () {
-        return {
-            message: []
-        };
-    },
+
     methods: {
     handleLogout() {
      logout();
@@ -40,15 +36,7 @@ export default {
      // return this.isLoginSubject.asObservable();
     }
   },
-  // created()
-  // {
-  //   this.subscription = getLoggedInSubject.subscribe(this.message =>{
-  //     if(message){
-  //       this.message.push(message),
-  //     },else {
-  //       message =[];
-  //   }),
-  // },
+
 }
  
 </script>
