@@ -10,14 +10,15 @@
       </div>
       <div class="form-group mt-4">
         <div>Old Password</div>
-        <input v-model="oldPassword" type="password" :disabled="disabled" class="form-control mt-1">
+        <input v-model="oldPassword" type="password" class="form-control mt-1">
+        <small class="text-danger" v-if="oldPassword.length && passwordInvalid">Password should be between 3 - 12 letters</small>
       </div>
       <div class="form-group mt-4">
         <div>New Password</div>
         <input v-model="newPassword" type="password" class="form-control mt-1">
         <small class="text-danger" v-if="newPassword.length && passwordInvalid">Password should be between 3 - 12 letters</small>
       </div>
-      <button :disabled="usernameInvalid || passwordInvalid" type="submit" class="w-100 btn btn-primary mt-4 mb-3" @click="disabled=!disabled"
+      <button type="submit" class="w-100 btn btn-primary mt-4 mb-3"
       >Save Changes</button>
 
       <div v-if="error" class="alert alert-danger">
@@ -51,7 +52,14 @@ export default {
   },
   watch: {
     newPassword() {
-      if(this.password.length < 3 || this.password.length > 12) {
+      if(this.newPassword.length < 3 || this.newPassword.length > 12) {
+        this.passwordInvalid = true;
+        return;
+      }
+      this.passwordInvalid = false;
+    },
+    oldPassword() {
+      if(this.oldPassword.length < 3 || this.oldPassword.length > 12) {
         this.passwordInvalid = true;
         return;
       }
@@ -65,15 +73,19 @@ export default {
 
       updateUser(this.username, this.newPassword).then(() => {
         this.success = true;
+        this.$router.replace({path: "/game"})
       }).catch(() => {
         this.error = true;
       })
+    },
 
-      getUser(this.number.id).then(() => {
-        this.success = true;
-      }).catch(() => {
-        this.error = true;
-      })
+    loadData() {
+      if (localStorage.getItem(`usersId`)) {
+        getUser(localStorage.getItem(`usersId`)).then((response) => {
+          this.username = response.username;
+          this.oldPassword = response.oldPassword;
+        });
+      }
     }
   }
 }
