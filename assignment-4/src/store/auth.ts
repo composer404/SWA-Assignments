@@ -1,6 +1,6 @@
 // import AuthService from '../services/auth.service';
 
-// const user = JSON.parse(localStorage.getItem('user'));
+// const user = localStorage.getItem('user');
 // const initialState = user
 //   ? { status: { loggedIn: true }, user }
 //   : { status: { loggedIn: false }, user: null };
@@ -9,8 +9,8 @@
 //   namespaced: true,
 //   state: initialState,
 //   actions: {
-//     login({ commit}, user) {
-//       return AuthService.login(user).then(
+//     login({ commit}: { commit: Function }, username:string, password:string) {
+//       return AuthService.login(username,password).then(
 //         user => {
 //           commit('loginSuccess', user);
 //           return Promise.resolve(user);
@@ -21,12 +21,12 @@
 //         }
 //       );
 //     },
-//     logout({ commit }) {
+//     logout({ commit }: { commit: Function }) {
 //       AuthService.logout();
 //       commit('logout');
 //     },
-//     register({ commit }, user) {
-//       return AuthService.register(user).then(
+//     register({ commit }: { commit: Function },  username:string, password:string) {
+//       return AuthService.register(username,password).then(
 //         response => {
 //           commit('registerSuccess');
 //           return Promise.resolve(response.data);

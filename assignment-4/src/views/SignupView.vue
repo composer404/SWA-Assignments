@@ -17,7 +17,7 @@
         <button :disabled="usernameInvalid || passwordInvalid" type="submit" class="w-100 btn btn-primary mt-4 mb-3">Signup</button>
       
         <div v-if="error" class="alert alert-danger">
-        Error occured. Try again later.
+        Error occurred. Try again later.
     </div>
 
     <div v-if="success" class="alert alert-success">
@@ -66,6 +66,7 @@
 
         register(this.username, this.password).then(() => {
           this.success = true;
+          this.$router.push({path: "/login"})
         }).catch(() => {
           this.error = true;
         })

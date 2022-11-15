@@ -1,13 +1,43 @@
 <template>
   <nav>
-    <router-link to="/login">Login</router-link>
+    <div v-if="!isLoggedIn">
+      <router-link to="/login">Login</router-link>
     <router-link to="/signup">Signup</router-link>
-    <router-link to="/profile">Profile</router-link>
+  </div>
+  <div  v-if="isLoggedIn">
+    <router-link to="/profile">Profile</router-link> 
     <router-link to="/game">Game</router-link>
-    <router-link to="/leaderboard">Leaderboard</router-link>
+    <router-link to="/leaderboard" >Leaderboard</router-link>
+    <button @click="handleLogout()"  type="submit">Logout</button>
+  </div>
   </nav>
   <router-view/>
 </template>
+<script >
+import {logout, authAction, checkAuthentication } from './services/auth.service'
+export default {
+    data() {
+      return {
+        isLoggedIn: false,
+      }
+    },
+    methods: {
+      handleLogout() {
+        logout();
+        this.$router.replace({path: "/login"})
+      },
+    },
+    beforeMount() {
+      authAction.getAuthState().subscribe((state) => {
+          this.isLoggedIn = state;
+      });
+
+      checkAuthentication();
+    },
+  }
+ 
+</script>
+
 
 <style>
 #app {

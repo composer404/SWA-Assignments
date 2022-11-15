@@ -1,16 +1,33 @@
+import { BehaviorSubject, Observable, Subject } from "rxjs";
+
 import axios from "axios";
 import { getAuthHeader } from "../utils/auth-header";
 
-const API_URL = "http://localhost:9090/";
+//import router from "@/router";
 
-const register = (username: string, password: string) => {
+const API_URL = "http://localhost:9090/";
+const isLoginSubject = new Subject();
+export async function register(username: string, password: string) {
   return axios.post(API_URL + "users", {
     username,
     password,
   });
+}
+
+export const authAction = {
+  getAuthState: () => isLoginSubject.asObservable(),
+  setAuthState: (state: boolean) => isLoginSubject.next(state),
 };
 
-const login = async (username: string, password: string) => {
+export function checkAuthentication() {
+  if (localStorage.getItem("user")) {
+    authAction.setAuthState(true);
+    return true;
+  }
+  return false;
+}
+
+export function login(username: string, password: string) {
   return axios
     .post(API_URL + "login", {
       username,
@@ -19,10 +36,22 @@ const login = async (username: string, password: string) => {
     .then((response: any) => {
       if (response.data.token) {
         localStorage.setItem("user", JSON.stringify(response.data));
+        authAction.setAuthState(true);
       }
       return response.data;
     });
-};
+}
+
+// export function login(username: string, password: string) {
+//   return axios
+//     .post(API_URL + "login", {
+//       username,
+//       password,
+//     })
+//     .then((res) => {
+//       localStorage.setItem(`user`, JSON.stringify(res.data));
+//     });
+// }
 
 export async function updateUser(id: number, body: any) {
   return axios
@@ -54,15 +83,24 @@ export async function getUser(id: number) {
     });
 }
 
-const logout = () => {
+// export function LoggedIn(): boolean {
+//   // const idToken = getIdToken();
+//   // return !!idToken && !isTokenExpired(idToken);
+//   //return localStorage.getItem("user");
+//   // if(localStorage.getItem("user") != null)
+//   // {
+//   //   return true;
+//   // }
+//   // return false;
+//   return !!localStorage.getItem("user");
+// }
+
+export function logout() {
   localStorage.removeItem("user");
   localStorage.removeItem("currentGameId");
-};
+  authAction.setAuthState(false);
+}
 
 export default {
-  register,
-  login,
-  getUser,
-  logout,
-  updateUser,
+  isLoginSubject,
 };
