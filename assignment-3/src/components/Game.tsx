@@ -15,13 +15,13 @@ const Game = () => {
         if (currentMove >= maxMoves) {
             dispatch((finishGame(gameId)) as any);
         }
-    }, [currentMove, board])
+    }, [dispatch, currentMove, board])
 
     useEffect(() => {
         if (gameId && !board) {
             dispatch((loadSaveGame(gameId)) as any);
         }
-    }, [])
+    }, [dispatch])
 
     if (!isLoggedIn) {
       return <Navigate to="/login" />;

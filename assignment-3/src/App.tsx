@@ -21,13 +21,10 @@ const App = () => {
   let location = useLocation();
 
   useEffect(() => {
-    if (["/login", "/register"].includes(location.pathname)) {
-      dispatch(clearMessage()); // clear message when changing location
-    }
-  }, [dispatch, location]);
+    dispatch(clearMessage());
+  }, [dispatch, location])
 
   const logOut = useCallback(() => {
-
     dispatch((logout() as any));
   }, [dispatch]);
 

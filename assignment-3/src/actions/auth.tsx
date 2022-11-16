@@ -63,12 +63,19 @@ export const login = (username: string, password: string) => (dispatch: any) => 
         return Promise.resolve();
     },
     (error) => {
-      const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-        error.message ||
-        error.toString();
+      let message;
+      if (error.message.includes(`403`)) {
+        message = `Invalid login or password`;
+      }
+
+      if (!error.message.includes(`403`)) {
+        message =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+      }
 
       dispatch({
         type: LOGIN_FAIL,

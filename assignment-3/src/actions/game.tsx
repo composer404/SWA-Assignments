@@ -1,7 +1,7 @@
 import { ADD_SCORE, BOARD_CREATED, CLEAR_CURRENT, CLEAR_MESSAGE, CLEAR_SELECTION, FINISH_GAME, FIRST_ITEM_SELECTED, MESSAGE_ERROR, SECOND_ITEM_SELECTED, SET_GAMES, SET_MESSAGE } from './types'
 import { canMove, clearCurrent, create, createGame, getGame, getGames, initalScan, move, updateGame } from '../services/game.service'
 
-import { RandomColorGenerator } from '../utils/cyclic-generator';
+import { RandomColorGenerator } from '../utils/random-color-generator';
 
 export const createBoard = (userId: number, gameId: any) => (dispatch: any) => {
     const generator = new RandomColorGenerator();

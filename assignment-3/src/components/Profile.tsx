@@ -19,11 +19,11 @@ const Profile = () => {
 
   useEffect(() => {
     dispatch((loadUserData(user.userId)) as any)
-  }, [])
+  }, [dispatch])
 
   useEffect(() => {
     setUsername(user.username);
-  }, [user])
+  }, [dispatch, user])
 
   if (!isLoggedIn) {
     return <Navigate to="/login" />;

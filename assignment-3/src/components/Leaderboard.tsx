@@ -38,12 +38,17 @@ const Leaderboard = () => {
                         <div>USER: {filteredGames[i].user}</div>
                     </div>)
             }
+            if (!gamesToDisaply.length) {
+                gamesToDisaply.push(
+                    <div key={'noDataUser'}>No data</div>
+                )
+            }
+
             return gamesToDisaply;
     }
 
     const renderGlobalLeaders = () => {
             if(!games?.length) {
-                dispatch(getAllGames() as any);
                 return;
             }
             const filteredGames = games.filter((game: any) => {
@@ -61,6 +66,13 @@ const Leaderboard = () => {
                         <div>USER: {filteredGames[i].user}</div>
                     </div>)
             }
+
+            if (!gamesToDisaply.length) {
+                gamesToDisaply.push(
+                    <div key={'noDataGlobal'}>No data</div>
+                )
+            }
+
             return gamesToDisaply;
     }
   
@@ -68,22 +80,12 @@ const Leaderboard = () => {
         <div className="leaderboard">
             <div className="leaderboard-column">
                 <div className="title">User best scores</div>
-                {games?.length && renderUserScores()}
-                {!games?.length && (
-                    <div>
-                        No data
-                        </div>
-                )}
+                {renderUserScores()}
             </div>
             
             <div className="leaderboard-column">
                 <div className="title">Best scores in total</div>
-                {games?.length && renderGlobalLeaders()}
-                {!games?.length && (
-                    <div>
-                        No data
-                        </div>
-                )}
+                {renderGlobalLeaders()}
             </div>
         </div>
     )

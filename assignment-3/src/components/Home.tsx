@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 
 import { getGames } from "../services/game.service";
+import { useDispatch } from "react-redux";
 
 const Home = () => {
-
+  const dispatch = useDispatch();
   const [content, setContent] = useState("");
 
   useEffect(() => {
@@ -20,7 +21,7 @@ const Home = () => {
         setContent(_content);
       }
     );
-  }, []);
+  }, [dispatch]);
 
   return (
     <div className="container">
