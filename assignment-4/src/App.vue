@@ -7,8 +7,8 @@
   <div  v-if="isLoggedIn">
     <router-link to="/profile">Profile</router-link> 
     <router-link to="/game">Game</router-link>
-    <router-link to="/leaderboard" >Leaderboard</router-link>
-    <button @click="handleLogout()"  type="submit">Logout</button>
+    <router-link to="/leaderboard">Leaderboard</router-link>
+    <button @click="handleLogout()"  type="submit" class="btn btn-small ml-2 btn-secondary">Logout</button>
   </div>
   </nav>
   <router-view/>
@@ -31,13 +31,10 @@ export default {
       authAction.getAuthState().subscribe((state) => {
           this.isLoggedIn = state;
       });
-
       checkAuthentication();
     },
   }
- 
 </script>
-
 
 <style>
 #app {

@@ -29,7 +29,6 @@
 
 <script>
   import { create, initalScan, canMove, move, updateGame, createGame, saveGameId, getGame } from '@/services/game.service'
-  //import {login} from '@/services/auth.service'
   import { RandomColorGenerator } from '@/utils/generator'
 
   export default {
@@ -52,11 +51,10 @@
         const initBoard = create(this.generator, 4, 4);
         this.board = initalScan(this.generator, initBoard).board;
 
-        // ! TO UPDATE
         const result = await createGame(JSON.parse(localStorage.getItem(`user`)).userId);
         updateGame(result.id, { board: this.board });
         saveGameId(result.id);
-        this.gameId = result; 
+        this.gameId = result.id; 
       },
       getBoardRows() {
         const rows = [];
@@ -120,7 +118,6 @@
       }
     },
     beforeMount() {
-      //login();
       this.generator = new RandomColorGenerator();
       if (localStorage.getItem(`currentGameId`)) {
         getGame(localStorage.getItem(`currentGameId`)).then((game) => {

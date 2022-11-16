@@ -7,7 +7,7 @@
 </template>
   
   <script>
-import { getUser } from '../services/auth.service'
+// import { getUser } from '../services/auth.service'
 
   export default {
     data() {
@@ -20,9 +20,10 @@ import { getUser } from '../services/auth.service'
         score: undefined,
     },
     beforeMount() {
-        getUser(this.score.user).then((data) => {
-            this.username = data.username;
-        });
+        // ! Not possible with api guard
+        // getUser(this.score.user).then((data) => {
+        //     this.username = data.username;
+        // });
     }
   }
   </script>

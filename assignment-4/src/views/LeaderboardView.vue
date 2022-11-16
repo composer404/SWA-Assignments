@@ -4,18 +4,23 @@
     <div class="d-flex w-100 p-4">
       <div class="w-50 p-4">
         <div class="title">BEST USER SCORES</div>
+        <div v-if="!userBest.length">
+            No data
+        </div>
           <ScoreCard v-for="(userScore, index) in userBest" :key="'userbestItem' + index" :score="{...userScore}"/>
       </div>
       <div class="w-50 p-4">
         <div class="title">BEST TOTAL SCORES</div>
-        <ScoreCard v-for="(totalBest, index) in userBest" :key="'userbestItem' + index" :score="{...totalBest}"/>
+        <div v-if="!totalBest.length">
+            No data
+        </div>
+        <ScoreCard v-for="(totalScore, index) in totalBest" :key="'userbestItem' + index" :score="{...totalScore}"/>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-    // eslint-disable-next-line no-unused-vars
     import ScoreCard from '@/components/ScoreCard.vue';
     import { getGames } from '@/services/game.service';
 

@@ -1,5 +1,4 @@
 import axios from "axios";
-import { buildSlots } from "@vue/compiler-core";
 import { getAuthHeader } from "../utils/auth-header";
 
 export type Generator<T> = { next: () => T };
@@ -51,18 +50,8 @@ export type MoveResult<T> = {
 const API_URL = "http://localhost:9090/";
 
 /* ---------------------------- API COMMUNICATION --------------------------- */
-// export function login(username: string, password: string) {
-//   return axios
-//     .post(API_URL + "login", {
-//       username,
-//       password,
-//     })
-//     .then((res) => {
-//      localStorage.setItem(`user`, JSON.stringify(res.data));
-     
-//     });
-// }
-export function logout () {
+
+export function logout() {
   localStorage.removeItem("user");
   localStorage.removeItem("currentGameId");
 }

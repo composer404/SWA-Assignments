@@ -17,12 +17,16 @@
         <button :disabled="usernameInvalid || passwordInvalid" type="submit" class="w-100 btn btn-primary mt-4 mb-3">Login</button>
       
         <div v-if="error" class="alert alert-danger">
-        Error occurred. Try again later.
-    </div>
+          Error occurred. Try again later.
+        </div>
 
-    <div v-if="success" class="alert alert-success" >
-      Login successful!
-    </div>
+        <div v-if="authenticationError" class="alert alert-danger">
+          Invalid login or password
+        </div>
+
+        <div v-if="success" class="alert alert-success" >
+          Login successful!
+        </div>
       </form>
     </div>
   </div>
@@ -41,6 +45,7 @@ import {login} from '../services/auth.service';
         
         usernameInvalid: true,
         passwordInvalid: true,
+        authenticationError: false,
       }
     },
 
@@ -64,13 +69,19 @@ import {login} from '../services/auth.service';
     methods: {
       signIn() {
         this.error = false;
+        this.authenticationError = false;
         this.success = false;
       
 
         login(this.username, this.password).then(() => {
            this.success = true;
           this.$router.replace({path: "/game"})
-        }).catch(() => {
+        }).catch((err) => {
+          if (err.message.includes('403')) {
+            this.authenticationError = true;
+            return;
+          }
+
           this.error = true;
         })
       },

@@ -11,18 +11,22 @@
       <div class="form-group mt-4">
         <div>Old Password</div>
         <input v-model="oldPassword" type="password" class="form-control mt-1">
-        <small class="text-danger" v-if="oldPassword.length && passwordInvalid">Password should be between 3 - 12 letters</small>
+        <small class="text-danger" v-if="oldPassword.length && oldPasswordInvalid">Password should be between 3 - 12 letters</small>
       </div>
       <div class="form-group mt-4">
         <div>New Password</div>
         <input v-model="newPassword" type="password" class="form-control mt-1">
-        <small class="text-danger" v-if="newPassword.length && passwordInvalid">Password should be between 3 - 12 letters</small>
+        <small class="text-danger" v-if="newPassword.length && newPasswordInvalid">Password should be between 3 - 12 letters</small>
       </div>
       <button type="submit" class="w-100 btn btn-primary mt-4 mb-3"
       >Save Changes</button>
 
       <div v-if="error" class="alert alert-danger">
         Error occured. Try again later.
+      </div>
+
+      <div v-if="passwordMismatch" class="alert alert-danger">
+        Old password is incorrect!
       </div>
 
       <div v-if="success" class="alert alert-success">
@@ -34,60 +38,73 @@
 </template>
 
 <script>
-import {getUser, updateUser} from '../services/auth.service';
+import { getUser, updateUser} from '../services/auth.service';
 
 export default {
   data() {
     return {
       username: '',
       oldPassword: '',
+      oldPasswordForAPI: ``,
       newPassword: '',
       error: undefined,
       success: undefined,
       number: 0,
       disabled: true,
+      userId: undefined,
 
-      passwordInvalid: true,
+      oldPasswordInvalid: true,
+      newPasswordInvalid: true,
+      passwordMismatch: false,
     }
   },
   watch: {
     newPassword() {
       if(this.newPassword.length < 3 || this.newPassword.length > 12) {
-        this.passwordInvalid = true;
+        this.newPasswordInvalid = true;
         return;
       }
-      this.passwordInvalid = false;
+      this.newPasswordInvalid = false;
     },
     oldPassword() {
       if(this.oldPassword.length < 3 || this.oldPassword.length > 12) {
-        this.passwordInvalid = true;
+        this.oldPasswordInvalid = true;
         return;
       }
-      this.passwordInvalid = false;
+      this.oldPasswordInvalid = false;
     }
   },
   methods: {
     editUser() {
       this.error = false;
       this.success = false;
+      this.passwordInvalid = false;
+      this.passwordMismatch = false;
 
-      updateUser(this.username, this.newPassword).then(() => {
+      if (this.oldPassword !== this.oldPasswordForAPI) {
+        this.passwordMismatch = true;
+        return;
+      }
+
+      updateUser(this.userId, {
+        password: this.newPassword,
+      }).then(() => {
         this.success = true;
-        this.$router.replace({path: "/game"})
       }).catch(() => {
         this.error = true;
       })
     },
-
-    loadData() {
-      if (localStorage.getItem(`usersId`)) {
-        getUser(localStorage.getItem(`usersId`)).then((response) => {
+  }, 
+  beforeMount() {
+       if (localStorage.getItem(`user`)) {
+        this.userId = parseInt(JSON.parse(localStorage.getItem(`user`)).userId, 10);
+        getUser(this.userId).then((response) => {
           this.username = response.username;
-          this.oldPassword = response.oldPassword;
+          this.oldPasswordForAPI = response.password;
         });
       }
-    }
-  }
+    },
+  
 }
 </script>
 
