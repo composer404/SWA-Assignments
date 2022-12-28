@@ -1,6 +1,6 @@
-import model from "./parent-model";
+import { model } from "./parent-model";
 
-const forecastModel = (forecasts, filter = () => true) => {
+const forecastModel = (forecasts) => {
     const parentModel = model();
 
     const hourlyForecast = () => {

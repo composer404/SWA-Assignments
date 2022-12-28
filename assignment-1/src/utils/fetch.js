@@ -11,6 +11,8 @@ const fetchCommon = {
 
 /* ------------------------ RECEIVING DATA WITH FETCH ----------------------- */
 
+// ! Q2 (Prototypal inheritance)
+// ! Q6 (fetch)
 const fetchWrapper = {
     fetchFromApi: async (url) => {
         console.log(`Fetch is used`);
@@ -30,6 +32,8 @@ Object.setPrototypeOf(fetchWrapper, fetchCommon);
 
 
 /* --------------------- RECEIVING DATA WITH XMLREQUEST --------------------- */
+
+// ! Q6 (xmlHttpRequest)
 
 const xmlRequestWrapper = {
     fetchFromApi: async (url) => {
@@ -62,6 +66,6 @@ const xmlRequestWrapper = {
     },
 }
 
-Object.setPrototypeOf(xmlRequestWrapper, fetchCommon);
+// Object.setPrototypeOf(xmlRequestWrapper, fetchCommon);
 
-export { fetchWrapper, xmlRequestWrapper };
+export { fetchWrapper, xmlRequestWrapper, fetchCommon };

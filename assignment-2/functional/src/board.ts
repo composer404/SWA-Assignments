@@ -22,6 +22,12 @@ export type Piece<T> = {
   position: Position;
 };
 
+export type RemoveMatchesFn<T> = (
+  rowMatches: Piece<T>[],
+  columnMatches: Piece<T>[]
+) => void;
+
+// ! Q3 (object and array, primitive)
 export type Board<T> = {
   width: number;
   height: number;
@@ -82,7 +88,7 @@ export function move<T>(
   if (isMoveLegal(board, first, second)) {
     swapPieces(board, first, second);
     const effects = [];
-    scanBoard(board, generator, effects);
+    scanBoard(board, generator, effects, removedMatchedValues);
 
     return {
       board,
@@ -103,7 +109,7 @@ export function move<T>(
 /* ----------------------- COLUMN MATCHES WITH RECURSTION ---------------------- */
 
 /**
- * Searchs for matches in all rows of the board.
+ * Search for matches in all rows of the board.
  * @param board the given board
  * @returns matches with all occured effects
  */
@@ -197,7 +203,7 @@ function refillBoard<T>(
     board,
   });
 
-  scanBoard(board, generator, effects);
+  scanBoard(board, generator, effects, removedMatchedValues);
 }
 
 function shiftElementsInColumn<T>(
@@ -214,7 +220,7 @@ function shiftElementsInColumn<T>(
  * Return the position of the next element based on the given direction and given piece
  * @param currentPiece the piece to compare with
  * @param direction the direction to find next piece
- * @returns the postion of the found next piece
+ * @returns the position of the found next piece
  */
 function findNextPiecePosition<T>(
   currentPiece: Piece<T>,
@@ -372,17 +378,19 @@ function getAllPiecesInColumn<T>(board: Board<T>, columnIndex: number) {
 /**
  * Scans the board to find all matches, removes them and calls a recursive refill function
  */
+// ! Q4 (Own higher order function)
 function scanBoard<T>(
   board: Board<T>,
   generator: Generator<T>,
-  effects: Effect<T>[]
+  effects: Effect<T>[],
+  removeMatchesFn: RemoveMatchesFn<T>
 ): void {
   const rowMatchResults = getAllRowMatches(board);
   const columnMatchResults = getAllColumnMatches(board);
   effects.push(...rowMatchResults.effects);
   effects.push(...columnMatchResults.effects);
   if (rowMatchResults.matches.length || columnMatchResults.matches.length) {
-    removedMatchedValues(rowMatchResults.matches, columnMatchResults.matches);
+    removeMatchesFn(rowMatchResults.matches, columnMatchResults.matches);
     refillBoard(board, generator, effects);
   }
 }
@@ -467,7 +475,7 @@ function isMoveLegal<T>(
 }
 
 /**
- * Checks is the given postion is outside of the generated board
+ * Checks is the given position is outside of the generated board
  * @param p the given position
  * @returns boolean value based on the check state
  */
@@ -498,7 +506,8 @@ function swapPieces<T>(board: Board<T>, first: Position, second: Position) {
 }
 
 function findPieceOnPosition<T>(board: Board<T>, position: Position) {
-  return board.pieces.find((element) => {
+  // ! Q4 (JS higher-order function)
+  return board.pieces.find((element: Piece<T>) => {
     return (
       element.position.col == position.col &&
       element.position.row == position.row
@@ -509,6 +518,8 @@ function findPieceOnPosition<T>(board: Board<T>, position: Position) {
 /**
  * Fills the board with inital values given by the generator
  */
+
+// ! Q4 (Own higher-order function)
 function initBoardFill<T>(
   generator: Generator<T>,
   height: number,
@@ -527,7 +538,7 @@ function initBoardFill<T>(
     }
   }
 
-  // Monkey patched function to pieces object
+  // Monkey patched function to swap properties
   (pieces as any).swapProperties = (
     firstIndex: number,
     secondIndex: number,

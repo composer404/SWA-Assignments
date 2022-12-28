@@ -6,6 +6,7 @@ export default (forecastModel, dataModel, view) => {
 
         /* --------------- ACTION REALATED WITH RELOADING DATA FOR SELECTED CITY -------------- */
 
+        // ! Q5 (asynchronous)
         case `city-chagne`:
           const forecastUrl = params.wrapper.buildUrl(params.forecastEndpoint, params.place);
           params.wrapper.fetchFromApi(forecastUrl)

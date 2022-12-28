@@ -34,6 +34,7 @@
 
 <script >
 import {login} from '../services/auth.service';
+import { store } from '../utils/store'
 
   export default {
     data() {
@@ -46,6 +47,7 @@ import {login} from '../services/auth.service';
         usernameInvalid: true,
         passwordInvalid: true,
         authenticationError: false,
+        store,
       }
     },
 
@@ -74,8 +76,10 @@ import {login} from '../services/auth.service';
       
 
         login(this.username, this.password).then(() => {
-           this.success = true;
+          this.success = true;
+          this.store.isLoggedIn = true;
           this.$router.replace({path: "/game"})
+
         }).catch((err) => {
           if (err.message.includes('403')) {
             this.authenticationError = true;

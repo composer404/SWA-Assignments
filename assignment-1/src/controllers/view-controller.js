@@ -1,4 +1,4 @@
-import { fetchWrapper, xmlRequestWrapper } from "../utils/fetch";
+import { fetchCommon, fetchWrapper, xmlRequestWrapper } from "../utils/fetch";
 
 import { DateTime } from "luxon";
 
@@ -172,7 +172,7 @@ export default window => {
 
         weatherSectionTitle.innerHTML = `Weather (Last day: ${lastDay})`;
         weatherSection.appendChild(createCardWithData([{
-            label: `Minimim Temperature`,
+            label: `Minimum Temperature`,
             value: `${range.minTemperature}  &#176;${range.minTemperatureUnit}`
         },
         {
@@ -248,14 +248,17 @@ export default window => {
             })
         };
 
+        // ! Q1 (object create + spread operator)
         xmlButton.onclick = () => {
-            selectedApiWrapper = xmlRequestWrapper;
+            selectedApiWrapper = Object.create({...fetchCommon, ...xmlRequestWrapper});
+
             xmlButton.classList.add(`selected-button`);
             fetchButton.classList.remove(`selected-button`);
         };
 
         fetchButton.onclick = () => {
             selectedApiWrapper = fetchWrapper;
+            console.log(`fetch wrapper`, selectedApiWrapper);
             fetchButton.classList.add(`selected-button`);
             xmlButton.classList.remove(`selected-button`);
         };

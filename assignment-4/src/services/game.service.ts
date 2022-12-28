@@ -20,6 +20,7 @@ export type Match<T> = {
   positions: Position[];
 };
 
+// ! Q3 (generic)
 export type Piece<T> = {
   value: T;
   position: Position;
@@ -135,6 +136,7 @@ export function create<T>(
   };
 }
 
+// ! Q3 (Function and union)
 export function piece<T>(board: Board<T>, p: Position): T | undefined {
   if (!isPositionOutsideBoard(board, p)) {
     return undefined;

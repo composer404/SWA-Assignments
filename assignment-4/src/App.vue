@@ -1,10 +1,10 @@
 <template>
   <nav>
-    <div v-if="!isLoggedIn">
+    <div v-if="!store.isLoggedIn">
       <router-link to="/login">Login</router-link>
     <router-link to="/signup">Signup</router-link>
   </div>
-  <div  v-if="isLoggedIn">
+  <div  v-if="store.isLoggedIn">
     <router-link to="/profile">Profile</router-link> 
     <router-link to="/game">Game</router-link>
     <router-link to="/leaderboard">Leaderboard</router-link>
@@ -14,24 +14,27 @@
   <router-view/>
 </template>
 <script >
-import {logout, authAction, checkAuthentication } from './services/auth.service'
+import {logout, checkAuthentication } from './services/auth.service'
+import { store } from './utils/store'
+
 export default {
     data() {
       return {
-        isLoggedIn: false,
+        store
       }
     },
     methods: {
       handleLogout() {
         logout();
+        this.store.isLoggedIn = false;
         this.$router.replace({path: "/login"})
       },
     },
     beforeMount() {
-      authAction.getAuthState().subscribe((state) => {
-          this.isLoggedIn = state;
-      });
-      checkAuthentication();
+      // authAction.getAuthState().subscribe((state) => {
+      //     this.isLoggedIn = state;
+      // });
+      this.store.isLoggedIn = checkAuthentication();
     },
   }
 </script>

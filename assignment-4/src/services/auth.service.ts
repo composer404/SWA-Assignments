@@ -1,9 +1,10 @@
-import { Subject } from "rxjs";
+// import { Subject } from "rxjs";
 import axios from "axios";
 import { getAuthHeader } from "../utils/auth-header";
+// import { store } from "../utils/store"
 
 const API_URL = "http://localhost:9090/";
-const isLoginSubject = new Subject();
+// const isLoginSubject = new Subject();
 export async function register(username: string, password: string) {
   return axios.post(API_URL + "users", {
     username,
@@ -11,14 +12,14 @@ export async function register(username: string, password: string) {
   });
 }
 
-export const authAction = {
-  getAuthState: () => isLoginSubject.asObservable(),
-  setAuthState: (state: boolean) => isLoginSubject.next(state),
-};
+// export const authAction = {
+//   getAuthState: () => isLoginSubject.asObservable(),
+//   setAuthState: (state: boolean) => isLoginSubject.next(state),
+// };
 
 export function checkAuthentication() {
   if (localStorage.getItem("user")) {
-    authAction.setAuthState(true);
+    // authAction.setAuthState(true);
     return true;
   }
   return false;
@@ -33,7 +34,7 @@ export function login(username: string, password: string) {
     .then((response: any) => {
       if (response.data.token) {
         localStorage.setItem("user", JSON.stringify(response.data));
-        authAction.setAuthState(true);
+        // authAction.setAuthState(true);
       }
       return response.data;
     });
@@ -64,7 +65,7 @@ export async function getUser(id: number) {
         ...getAuthHeader(),
       },
     })
-    .then((response) => {
+    .then((response: any) => {
       return response.data;
     });
 }
@@ -72,9 +73,9 @@ export async function getUser(id: number) {
 export function logout() {
   localStorage.removeItem("user");
   localStorage.removeItem("currentGameId");
-  authAction.setAuthState(false);
+  // authAction.setAuthState(false);
 }
 
 export default {
-  isLoginSubject,
+  // isLoginSubject,
 };

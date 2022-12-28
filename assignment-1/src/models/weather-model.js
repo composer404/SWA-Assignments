@@ -1,7 +1,10 @@
-import model from "./parent-model";
+import { ModelConstructor, model } from "./parent-model";
 
-const dataModel = (data, filter = () => true) => {
-    const parentModel = model();
+// ! Q1 (Constructor function usage and prototype)
+const dataModel = (data) => {
+    const parentModel = new ModelConstructor();
+    ModelConstructor.prototype.getMeasurementTypes = model().getMeasurementTypes;
+
     const getMinTemperatureForLastDay = () => {
         const values = parentModel.getMeasurementTypeForLastDay(data, `temperature`);
         const minTemperature = Math.min(...values.map(element => {
@@ -26,6 +29,7 @@ const dataModel = (data, filter = () => true) => {
         }
     } 
 
+    // ! Q2 (Concatenative Inheritance)
     const getLastDayTemperatureRange = () => {
         const min = getMinTemperatureForLastDay();
         const max = getMaxTemperatureForLastDay();
@@ -63,6 +67,7 @@ const dataModel = (data, filter = () => true) => {
         }
     };
 
+    // ! Q1 (Factory function)
     const getLastMeasurementEachKind = () => {
         const types = parentModel.getMeasurementTypes();
         return {

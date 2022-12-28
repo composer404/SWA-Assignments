@@ -4,6 +4,11 @@ import { ADD_SCORE, BOARD_CREATED, CLEAR_CURRENT, CLEAR_SELECTION, FINISH_GAME, 
 
 const gameId = JSON.parse(localStorage.getItem("currentGameId") as string);
 
+interface Action {
+    type: string;
+    payload: any;
+}
+
 const initialState = {
     points: 0,
     currentMove: 0,
@@ -12,7 +17,7 @@ const initialState = {
     gameId,
 };
 
-export default function (state = initialState, action: any) {
+export default function (state = initialState, action: Action) {
   const { type, payload } = action;
 
   switch (type) {
