@@ -11,13 +11,24 @@ const fetchCommon = {
 
 /* ------------------------ RECEIVING DATA WITH FETCH ----------------------- */
 
-// ! Q2 (Prototypal inheritance)
-// ! Q6 (fetch)
+// ! Q2 (Prototypal inheritance) - used to add methods and properties in objects with a prototype chain. 
+// Allows to assign a prototype to a certain object - to the fetch wrapper, we assign fetch common as its prototype
+// Thanks to that we have a newly created prototype that might be used.
+
+// ! Q6 (fetch) - uses the promises to avoid the callback hell - callbacks whin callbacks.
+// Fetch sends a request to the api to retrieve the data from the server. 
+
+// ! Q5 (3 - request) - the place where the asynchronous process begins using async and await.
+// Await allows to wait until the value of promise is returned.
+// Await is used to unwrap promises by passing a Promise as the expression 
+
 const fetchWrapper = {
+    // async - declares a function where the await keyword is permitted within the function body on a certain promise 
     fetchFromApi: async (url) => {
         console.log(`Fetch is used`);
         const response = await fetch(url);
         return response.json();
+        // return response with the json format
     },
     postData: async (url, body) => {
         const resposne = await fetch(url, {
@@ -33,16 +44,23 @@ Object.setPrototypeOf(fetchWrapper, fetchCommon);
 
 /* --------------------- RECEIVING DATA WITH XMLREQUEST --------------------- */
 
-// ! Q6 (xmlHttpRequest)
+// ! Q6 (xmlHttpRequest) - uses the callback that handles the responses.
+// XMLHttpRequest object is used to retrieve data from a server asynchronously.
+
+// ! Q5 (4 - promise) - is a proxy for a value, not necessairly known, when the promise is created.
 
 const xmlRequestWrapper = {
-    fetchFromApi: async (url) => {
+    fetchFromApi: (url) => {
         console.log(`XMLHttpRequest is used`);
         const request = new XMLHttpRequest();
 
         const promise = new Promise((resolve) => {
             request.onload = () => {
                 resolve(JSON.parse(request.responseText));
+            }
+
+            request.onerror = () => {
+                reject(new Error('Request error'));
             }
         });
 
@@ -51,7 +69,7 @@ const xmlRequestWrapper = {
         return promise;
     },
 
-    postData: async (url, body) => {
+    postData: (url, body) => {
         const request = new XMLHttpRequest();
 
         const promise = new Promise((resolve) => {

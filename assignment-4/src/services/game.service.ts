@@ -21,6 +21,8 @@ export type Match<T> = {
 };
 
 // ! Q3 (generic)
+// The generic value tells about the object, it can be changed at the moment when the object is generated.
+// Generic does not restrict one data type. Provides a way to work with any type.
 export type Piece<T> = {
   value: T;
   position: Position;
@@ -137,6 +139,11 @@ export function create<T>(
 }
 
 // ! Q3 (Function and union)
+// Javascript is dynamic and therefore it is possible to receive different answers from the different functions.
+// If the piece is placed outside the board it becomes undefined, if it is inside it returns the value of the location.
+// The function can be declared by assigning a type to each function.
+// The function returns a union T I undefined. - union allows to statically keep the characteristics of JavaScript which is dynamically typed.
+
 export function piece<T>(board: Board<T>, p: Position): T | undefined {
   if (!isPositionOutsideBoard(board, p)) {
     return undefined;

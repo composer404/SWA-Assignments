@@ -9,6 +9,10 @@ import { useState } from "react";
 const Login = () => {
   const dispatch = useDispatch();
 
+  // ! Q9 (use state - react hook that lets you add a state variable to the component)
+  // local state stores the variables of the same component.
+  // Use State might be used only in 1 component
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 

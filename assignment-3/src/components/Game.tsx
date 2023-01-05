@@ -10,6 +10,7 @@ const Game = () => {
     const { board, firstItem, generator, points, gameId, currentMove, maxMoves, completed } = useSelector((state: any) => { return state.game}, shallowEqual);
     const { isLoggedIn, user } = useSelector((state: any) => state.auth);
     const { message } = useSelector((state: any) => state.message);
+    // UseSelector - the hook that updates the state of an object
     
     useEffect(() => {
         if (currentMove >= maxMoves) {
@@ -93,6 +94,16 @@ const Game = () => {
         }
         return boardToDisplay;
     }
+
+    // ! Q7 (1 - user interaction) 
+    // The user clicks the button, turns on the action create board, sending the question to the api to create a board.
+
+    // ! Q7 (5 - new state) Use Selector is a hook that listens to the game's state, - update the object, returns the newest state.
+    // Hooks are used for subscribing on the state change.
+    // 1-way data flow has been completed - the view comes with the updated state.
+
+    // The reducers are split at the different parts of the app, therefore we maintain the principle of a single responsibility.
+
 
     return (
         <div>

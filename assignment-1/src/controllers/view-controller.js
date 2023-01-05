@@ -5,7 +5,14 @@ import { DateTime } from "luxon";
 export default window => {
     const document = window.document;
     const listeners = [];
-    let selectedApiWrapper = fetchWrapper;
+
+     // ! Q1 (object create + spread operator)
+     // direct objects creation - is made to create an object as a prototype
+     // thanks to that the object will include all the functions that come with the fetch common
+     // thanks to that it is possible to assign the properties to the newly created object
+     
+    let selectedApiWrapper = Object.create(fetchCommon);
+    selectedApiWrapper = fetchWrapper;
 
     /* ------------------------ HTML ELEMENTS DECLARATION ----------------------- */
 
@@ -232,6 +239,9 @@ export default window => {
             })
         };
     
+        // ! Q5 (1 - controller)
+        // The user clicks a button and the new event is created that is done in the city service.
+        // The onclick turns on the listener.
         aarhusButton.onclick = () => {
             header.textContent = `Aarhus`;
             const event = { type: `city-chagne`, wrapper: selectedApiWrapper, place: `Aarhus`, forecastEndpoint: 'forecast', dataEndpoint: 'data' };
@@ -248,9 +258,12 @@ export default window => {
             })
         };
 
-        // ! Q1 (object create + spread operator)
+    
         xmlButton.onclick = () => {
-            selectedApiWrapper = Object.create({...fetchCommon, ...xmlRequestWrapper});
+            selectedApiWrapper = Object.create(fetchCommon);
+            selectedApiWrapper = {
+                ...selectedApiWrapper,
+            }
 
             xmlButton.classList.add(`selected-button`);
             fetchButton.classList.remove(`selected-button`);

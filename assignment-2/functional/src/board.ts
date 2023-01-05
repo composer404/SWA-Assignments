@@ -28,10 +28,12 @@ export type RemoveMatchesFn<T> = (
 ) => void;
 
 // ! Q3 (object and array, primitive)
+
+//object
 export type Board<T> = {
-  width: number;
-  height: number;
-  pieces: Piece<T>[];
+  width: number; //primitive value
+  height: number; //primitive value
+  pieces: Piece<T>[]; //array
 };
 
 export type Effect<T> = {
@@ -379,6 +381,10 @@ function getAllPiecesInColumn<T>(board: Board<T>, columnIndex: number) {
  * Scans the board to find all matches, removes them and calls a recursive refill function
  */
 // ! Q4 (Own higher order function)
+// The function has its own type - RemoveMatchesFn
+// Use the function removeMatches inside the scanBoard function - this makes the higher order function.
+// Thanks to the higher order function we know what function need to be included.
+
 function scanBoard<T>(
   board: Board<T>,
   generator: Generator<T>,
@@ -507,6 +513,9 @@ function swapPieces<T>(board: Board<T>, first: Position, second: Position) {
 
 function findPieceOnPosition<T>(board: Board<T>, position: Position) {
   // ! Q4 (JS higher-order function)
+  // A function find takes an argument as a function that filters a certain board
+  // A function find returns a piece as an element
+  
   return board.pieces.find((element: Piece<T>) => {
     return (
       element.position.col == position.col &&
@@ -519,7 +528,7 @@ function findPieceOnPosition<T>(board: Board<T>, position: Position) {
  * Fills the board with inital values given by the generator
  */
 
-// ! Q4 (Own higher-order function)
+
 function initBoardFill<T>(
   generator: Generator<T>,
   height: number,

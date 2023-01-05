@@ -17,7 +17,9 @@ const person2 = {
     lastName: "Doe"
 }
   
-// We pass person1 as a "this" to the method
+// We pass person1 as a "this" to the method 
+// Allows to change this from the firstname/lastname to John Doe which a the property of person1
+// Call and Apply are identical, call sends an object as a board, where the apply is done after the point.
 person.fullName.call(person1);
 
 /* ----------------------------- APPLY FUNCTION ----------------------------- */
@@ -52,9 +54,13 @@ const member = {
     lastName: "Holland",
 }
 
+const methodWithNewContext = person5.findName.bind(number);
 person5.fullName.bind(member); 
 
 //? Prevent loosing this in callback functions
+//bind has an built in reference that allows to modify the connections to an object.
+//bind compared to call and apply returns a copy/new method with a new context.
+
 const person6 = {
     firstName:"John",
     lastName: "Doe",

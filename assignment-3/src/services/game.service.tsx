@@ -31,6 +31,7 @@ export type Board<T> = {
   pieces: Piece<T>[];
 };
 
+//The questionmark is an optional use of the properties, type or undefined.
 export type Effect<T> = {
   kind: string;
   board?: Board<T>;

@@ -3,6 +3,10 @@ import { canMove, clearCurrent, create, createGame, getGame, getGames, initalSca
 
 import { RandomColorGenerator } from '../utils/random-color-generator';
 
+// ! Q7 (2 - dispatch action)
+// After receiving the answers from an api, a disptach or hook is used that redirects to reducer, if the request has not been sent using then
+// But if the request has not happened, a new request is sent using setMessage.
+
 export const createBoard = (userId: number, gameId: any) => (dispatch: any) => {
     const generator = new RandomColorGenerator();
 
@@ -10,6 +14,7 @@ export const createBoard = (userId: number, gameId: any) => (dispatch: any) => {
     const initBoard = create(generator, 4, 4);
     const { board } = initalScan(generator, initBoard);
 
+    // Then is an asynchronous request to the API, which result is located there if it is correct, otherwise a catch is used
     createGame(userId).then((data) => {
         updateGame(data.id, {
             board,

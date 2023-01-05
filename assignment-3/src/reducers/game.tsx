@@ -17,6 +17,13 @@ const initialState = {
     gameId,
 };
 
+// ! Q7 (3 - Reducer) - updates the state based on the actions regarding the game's state.
+//Overrites the old state using the payload coming from an action.
+
+// ! Q9 (Reducer - does the global state management) - can be listened in many components.
+// Reducer state overrites the changes that are coming from the payload of an action.
+// Each component can listen to the chosen state
+
 export default function (state = initialState, action: Action) {
   const { type, payload } = action;
 
